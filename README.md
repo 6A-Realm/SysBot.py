@@ -5,28 +5,31 @@
 A sys-botbase client for remote control automation of Nintendo Switch consoles. Based on SysBot.NET, written in python. 
 
 ## Setup:
-> 1. Download the repo
-> 2. Make a discord bot
-> 3. Download sys-botbase on your switch
-> 4. Fill out the config.yaml
-> 5. Install dependencies
-> 6. py sysbot.py
+1. Download the repo
+2. Make a discord bot
+3. Download sys-botbase on your switch
+4. Fill out the config.yaml
+5. Install dependencies
+6. py sysbot.py
 
 ## Should I use this bot?
 If you want to use this for SysBot:
-    No. It barely works, I did it for fun. Use [SysBot.NET](https://github.com/kwsch/SysBot.NET) instead.
-    There is no legality checks and there is no pkx or pbx conversion. 
-    I did not implement anything with offsets other than b1s1.
-    This was more for fun. Use the other bot for actual SysBot use.
+
+	No. It barely works, I did it for fun. Use [SysBot.NET](https://github.com/kwsch/SysBot.NET) instead.
+	- There is no legality checks and there is no pkx or pbx conversion. 
+	- I did not implement anything with offsets other than b1s1.
+	- This was more for fun. Use the other bot for actual SysBot use.
+    
 If you want to use this for other features:
-    I personally use it along side SysBot.NET.
-    It has some nice features, especially if the bot is used in multiple servers.
+
+	I personally use it along side SysBot.NET.
+	It has some nice features, especially if the bot is used in multiple servers.
 
 ## Something doesn't work correctly:
 Not everything is tested and I doubt everything will work as expected.
-> If you want to open an issue then I might take a look at it. If you want to fork and fix then I could always pull as well.
+- If you want to open an issue then I might take a look at it. If you want to fork and fix then I could always pull as well.
 
-## I need more help:
+## Support:
 Ask nicely and I might have an answer
 [<img src="https://canary.discordapp.com/api/guilds/771539948687589386/widget.png?style=banner2">](https://discord.gg/TwyCFr5WDY)
 
