@@ -1,0 +1,19 @@
+##This is your configuration file. 
+token: Token.Goes.here
+botprefix: + 
+color: 0xFFA500 #Include 0x
+support-server-name: Pokemon EX Realm
+support-server-invite: https://discord.gg/BcDexg4jDu
+dmchannel: 908195847349612564
+botonname: genesect-online #Dont include emojis in channel names
+botdownname: genesect-offline #Dont include emojis in channel names
+donation: https://paypal.com
+
+##Switch Config
+ip: 10.0.0.164
+port: 6000
+directory: C:\Users\Laptop\Documents\SysBot.py\res\screen.jpg
+
+##Advanced Settings
+autolauncher: 1 # Key: 0 == means ask, 1 == yes, 2 == No
+autoscreen: 2 # Key: 1 == screen on, 2 == screen off
