@@ -1,6 +1,7 @@
 
 # SysBot.py
 [![License](https://img.shields.io/badge/license-GNU%20Affero%20General%20Public%20License%20Version%203%20or%20Later-blue.svg)]()
+
 A sys-botbase client for remote control automation of Nintendo Switch consoles. Based on SysBot.NET, written in python. 
 
 ## Setup:
@@ -33,14 +34,14 @@ Ask nicely and I might have an answer
 Feel free to fork and do the stuff I couldn't.
 
 ### Touchscreen input:
-- [] More accurate trade code input
+- [ ] More accurate trade code input
 ### CoreApi
-- [] Encryption and Decryption
-- [] Legality Checks
+- [ ] Encryption and Decryption
+- [ ] Legality Checks
 ### Screen capture
-- [] Fix pixelPeek
+- [ ] Fix pixelPeek
 ### Offset Checks
-- [] Make it more stable
+- [ ] Make it more stable
 
 ## Credits:
 - [olliz0r's sys-botbase](https://github.com/olliz0r/sys-botbase): Switch automation and pokemon injection
