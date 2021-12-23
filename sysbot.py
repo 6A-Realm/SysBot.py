@@ -52,15 +52,24 @@ async def on_ready():
         yes = {'yes', 'y'}
         choice = input().lower()
         if choice in yes:
-            client.load_extension(f'cogs.bdsp')   
+            client.load_extension(f'pokemon.connection')
+            client.load_extension(f'pokemon.pokeinput')
+            client.load_extension(f'pokemon.queue')
+            client.load_extension(f'pokemon.remote')
+            client.load_extension(f'pokemon.trader') 
+            client.load_extension(f'pokemon.advanced')          
         else:
             print('The bot will launch without sysbot commands.')
     if autolauncher == 1:
         console.print("Autolauncher set to true.", style="green")
-        client.load_extension(f'cogs.bdsp')
+        client.load_extension(f'pokemon.connection')
+        client.load_extension(f'pokemon.pokeinput')
+        client.load_extension(f'pokemon.queue')
+        client.load_extension(f'pokemon.remote')
+        client.load_extension(f'pokemon.trader')
+        client.load_extension(f'pokemon.advanced')          
     if autolauncher ==2:
         console.print('The bot will launch without sysbot commands.', style="blue")
-
 
 #Looped status sequence
     while True:
@@ -73,20 +82,26 @@ async def on_ready():
         await client.change_presence(activity=discord.Game(name=f'BDSP ooo'))
         await asyncio.sleep(30)
 
-##Removes errors/provides error responses ##Stolen from GriffinG1
+# Error Handler
 @client.event
 async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
         pass
-    elif isinstance(error, discord.ext.commands.errors.MissingRequiredArgument):
+    if isinstance(error, discord.ext.commands.errors.MissingRequiredArgument):
         await ctx.send("You are missing required arguments.")
-    elif isinstance(error, discord.ext.commands.errors.BadArgument):
+    if isinstance(error, discord.ext.commands.errors.BadArgument):
         await ctx.send("You were unclear with your arguments.")
-    elif isinstance(error, discord.ext.commands.errors.CheckFailure):
-        await ctx.send("You do not have permission to use this command.")
-    elif isinstance(error, discord.ext.commands.errors.CommandOnCooldown):
-        await ctx.send(f"Looks like you have already casted a vote recently!")
-
+    if isinstance(error, discord.ext.commands.errors.CommandOnCooldown):
+        await ctx.send(f"Looks like you have already casted a vote recently!")    
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send(f"You're missing the following permissions: \n**{', '.join(error.missing_permissions)}**")
+    if isinstance(error, discord.ext.commands.errors.CheckFailure):
+        await ctx.send("You do not have permission to use this command.")    
+    if isinstance(error, commands.BotMissingPermissions):
+        await ctx.send(f"I'm missing the following permissions: \n**{', '.join(error.missing_permissions)}**")
+    if isinstance(error, commands.NotOwner):
+        await ctx.send("Only the owner of this bot can use that command.")
+        
 ##Events
 @client.event
 async def on_message(message):
@@ -118,8 +133,7 @@ async def on_guild_join(guild):
 cogs = []
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
-        if not filename.startswith('bdsp') and not filename.startswith('advanced'):
-            cogs.append("cogs." + filename[:-3])
+        cogs.append("cogs." + filename[:-3])
 
 if __name__ == '__main__':
     for extension in cogs:
