@@ -39,7 +39,18 @@ class miscellaneous(commands.Cog):
     async def botstatus(self, ctx, user: discord.User):
         embed = discord.Embed(title=f"{user.name} is ", description= f'{user.name} is {user.activities[0].name}.', color=0xFFFFF6)
         await ctx.send(embed = embed)
-        
+
+    @commands.command()
+    async def source(self, ctx):
+        embed = discord.Embed(title="SysBot.py Source Code", url="https://github.com/6A-Realm/SysBot.py", description="Here is the source code for this bot.\nhttps://github.com/6A-Realm/SysBot.py", color=ctx.author.color)       
+        await ctx.send(embed = embed)
+
+    @commands.command()
+    async def channelid(self, ctx, *, name = None):
+        channel = discord.utils.get(ctx.guild.channels, name = name)
+        id = channel.id
+        await ctx.send(id) 
+
     @commands.command()
     @commands.guild_only()
     async def guide(self, ctx):

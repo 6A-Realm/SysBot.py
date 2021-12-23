@@ -19,7 +19,6 @@ with open("config.yaml") as file:
     botonname = data["botonname"]
     botdownname = data["botdownname"]
 
-
 class announcement(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -45,12 +44,10 @@ class announcement(commands.Cog):
     async def announcement(self, ctx, *, message):
         try:
             for chan in channels:
-                try:
-                    channel = self.client.get_channel(chan)
-                    info = discord.Embed(title='{0.user.name}'.format(self.client) + ' Update!', description=(message), color=embedcolor)
-                    await channel.send(embed=info)
-                except Exception as e:
-                    await ctx.send("Announcement message has been sent.")
+                channel = self.client.get_channel(chan)
+                info = discord.Embed(title='{0.user.name}'.format(self.client) + ' Update!', description=(message), color=embedcolor)
+                await channel.send(embed=info)
+            await ctx.send("Announcement message has been sent.")
         except Exception as e:
             await ctx.send(e)
 
@@ -59,16 +56,14 @@ class announcement(commands.Cog):
     async def botdown(self, ctx):
         try:
             for chan in channels:
-                try:
-                    channel = self.client.get_channel(chan)
-                    overwrite = channel.overwrites_for(ctx.guild.default_role)
-                    overwrite.send_messages = False
-                    info = discord.Embed(title='{0.user.name}'.format(self.client) + ' Has Crashed!', description='The bot is experiencing some difficulty. An announcement will be set out when it is fixed.\nJoin the [Support Server](https://discord.gg/BcDexg4jDu) for more info and updates.', color=0xD60FBB)
-                    await channel.send(embed=info)
-                    await channel.edit(name=botdownname)
-                    await channel.set_permissions(ctx.guild.default_role, overwrite=overwrite)
-                except Exception as e:
-                    await ctx.send("Bot down message has been sent.")
+                channel = self.client.get_channel(chan)
+                overwrite = channel.overwrites_for(ctx.guild.default_role)
+                overwrite.send_messages = False
+                info = discord.Embed(title='{0.user.name}'.format(self.client) + ' Has Crashed!', description='The bot is experiencing some difficulty. An announcement will be set out when it is fixed.\nJoin the [Support Server](https://discord.gg/BcDexg4jDu) for more info and updates.', color=0xD60FBB)
+                await channel.send(embed=info)
+                await channel.edit(name=botdownname)
+                await channel.set_permissions(ctx.guild.default_role, overwrite=overwrite)
+            await ctx.send("Bot down message has been sent.")
         except Exception as e:
             await ctx.send(e)
 
@@ -85,41 +80,31 @@ class announcement(commands.Cog):
 
 # {-- Public Moderator Locked Commands --}
     @commands.command(pass_context=True, aliases=['add'])
+    @commands.has_permissions(manage_channels=True)
     async def Add(self, ctx):
-        if ctx.message.author.guild_permissions.manage_channels:
-            channel = ctx.message.channel.id
-
-            with open("advanced/channels.yaml", encoding='utf-8') as file:
-                data = load(file)
-            if channel in data["channels"]:
-                await ctx.send('This channel is already listed in the update list.')
-            else:
-                data["channels"].append(channel)
-                channels.append(channel)
-                with open('advanced/channels.yaml', 'w') as writer:
-                    yaml.dump(data, writer)
-
-                await ctx.send('This channel has been added. You will now get announcements in this channel.')
+        channel = ctx.message.channel.id
+        with open("advanced/channels.yaml", encoding='utf-8') as file:
+            data = load(file)
+        if channel in data["channels"]:
+            await ctx.send('This channel is already listed in the update list.')
         else:
-            await ctx.send('You need the following permissions to use this command: `Manage Channels`.')
-
+            data["channels"].append(channel)
+            channels.append(channel)
+            with open('advanced/channels.yaml', 'w') as writer:
+                yaml.dump(data, writer)
+            await ctx.send('This channel has been added. You will now get announcements in this channel.')
 
     @commands.command(pass_context=True, aliases=['remove'])
+    @commands.has_permissions(manage_channels=True)
     async def Remove(self, ctx):
-        if ctx.message.author.guild_permissions.manage_channels:
             channel = ctx.message.channel.id
             with open("advanced/channels.yaml", encoding='utf-8') as file:
                 data = load(file)
-            try:
-                data["channels"].remove(channel)
-                channels.remove(channel)
-                with open('advanced/channels.yaml', 'w') as writer:
-                    yaml.dump(data, writer)
-                await ctx.send('This channel has been removed. You will no longer get announcements in this channel.')
-            except:
-                await ctx.send('An error occured. Please try again later.')
-        else:
-            await ctx.send('You need the following permissions to use this command: `Manage Channels`.')
+            data["channels"].remove(channel)
+            channels.remove(channel)
+            with open('advanced/channels.yaml', 'w') as writer:
+                yaml.dump(data, writer)
+            await ctx.send('This channel has been removed. You will no longer get announcements in this channel.')
 
 
 def setup(client):
