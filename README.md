@@ -31,6 +31,8 @@ Not everything is tested and I doubt everything will work as expected.
 
 ## Support:
 Ask nicely and I might have an answer
+
+
 [<img src="https://canary.discordapp.com/api/guilds/771539948687589386/widget.png?style=banner2">](https://discord.gg/TwyCFr5WDY)
 
 ## Future goals:
