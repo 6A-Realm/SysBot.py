@@ -4,13 +4,17 @@
 
 A sys-botbase client for remote control automation of Nintendo Switch consoles. Based on SysBot.NET, written in python. 
 
-## Setup:
-1. Download the repo
-2. Make a discord bot
-3. Download sys-botbase on your switch
-4. Fill out the config.yaml
-5. Install dependencies
-6. py sysbot.py
+## Installation in 10 Easy Steps:
+1. Clone or download this repository and extracting the zip:
+2. Install <a href="https://www.python.org/">python</a>. Make sure you click "Add to PATH".
+3. Create a bot on the [Discord Developer Portal](https://discordapp.com/developers/).
+4. Turn on **PRESENCE INTENT** and **SERVER MEMBERS INTENT** in the bot's settings page on the developer portal.
+5. Install the latest release of [sys-botbase](https://github.com/olliz0r/sys-botbase/releases) directly onto your switch for Pokemon trading functionality.
+6. Fill out **config.example.yaml** and rename to **config.yaml**.
+7. Open a command prompt by pressing the buttons `Windows Key` + `r`.
+8. Navigate to the SysBot.py-main folder using the `cd pathway` command.
+9. Install the requirements using the command `pip install -r requirements.txt`.
+10. Once all steps are completed, you can turn on the bot by using the command `py sysbot.py` or by double clicking on the sysbot.py file.
 
 ## Should I use this bot?
 If you want to use this for SysBot:
@@ -48,12 +52,15 @@ Feel free to fork and do the stuff I couldn't.
 ### Offset Checks
 - [ ] Make it more stable
 
+## Disclaimer:
+- The creators of this bot are not responsible for any actions you perform using it. Use it at you own risk.
+
 ## Credits:
-- [olliz0r's sys-botbase](https://github.com/olliz0r/sys-botbase): Switch automation and pokemon injection
-- [kwsch](https://github.com/kwsch/SysBot.NET): Offsets needed for b1s1
-- [Manu098vm](https://github.com/Manu098vm): Teaching me how to use offsets correctly
-- [GriffinG1](https://github.com/GriffinG1/FlagBot): Stole some stuff from Flagbot like the error handler and how he did legality checks
-- Santa, Bewears, Bones: Giving me ideas and fixing errors
+- [olliz0r's sys-botbase](https://github.com/olliz0r/sys-botbase): Switch automation and pokemon injection.
+- [kwsch](https://github.com/kwsch/SysBot.NET): Offsets needed for b1s1.
+- [Manu098vm](https://github.com/Manu098vm): Teaching me how to use offsets correctly.
+- [GriffinG1](https://github.com/GriffinG1/FlagBot): Stole some stuff from Flagbot that use CoreAPI.
+- Santa, Bewears, and Bones: Giving me ideas, fixing errors, and troubleshooting.
 
 ## License:
 [AGPLv3+](https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -72,6 +79,3 @@ This is free software, and you are welcome to redistribute it under certain cond
 
 	You should have received a copy of the GNU Affero General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-For more details on this issue, check the [COPYING](COPYING) file.
