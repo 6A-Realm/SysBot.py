@@ -96,14 +96,15 @@ class moderation(commands.Cog):
                 await channel.send(f"You responded with {reaction.emoji} so {member.name} was banned from this guild.")
 
     @commands.command()
+    @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     async def unban(self, ctx, id: int):
+        bans = list(map(lambda e: e[1].id, await ctx.guild.bans()))
+        if id not in bans:
+            return await ctx.send("This user is not banned.")
         user = await self.client.fetch_user(id)
-        try:
-            await ctx.guild.unban(user)
-            await ctx.send(f'{user.name} was unbanned')
-        except:
-            await ctx.send(f"Unable to find anyone with the ID {user}.")
+        await ctx.guild.unban(user)
+        await ctx.send(f'{user.name} was unbanned')
 
     @commands.command(pass_context=True)
     async def userinfo(self, ctx, user: discord.Member = None):

@@ -1,4 +1,3 @@
-# I did it somehow... sysbot.py
 import discord
 from discord import shard
 from discord.ext import commands
@@ -30,6 +29,7 @@ with open("config.yaml") as file:
 ##Simple bot settings like mentioning as a prefix, settings all intents to true, deleting built in discord.py help command
 client = commands.AutoShardedBot(shard_count=1, description="Sysbot ALPHA", command_prefix=commands.when_mentioned_or(botprefix), intents=discord.Intents.all(), help_command = None, pm_help = False)
 slash = SlashCommand(client, sync_commands=True)
+pokemon = ["connection", "coreapi", "pokeinput", "queue", "remote", "trader", "advanced"]       
 console = Console()
 
 #Bot Start Up
@@ -52,22 +52,21 @@ async def on_ready():
         yes = {'yes', 'y'}
         choice = input().lower()
         if choice in yes:
-            client.load_extension(f'pokemon.connection')
-            client.load_extension(f'pokemon.pokeinput')
-            client.load_extension(f'pokemon.queue')
-            client.load_extension(f'pokemon.remote')
-            client.load_extension(f'pokemon.trader') 
-            client.load_extension(f'pokemon.advanced')          
+            for extension in pokemon:
+                try:
+                    client.load_extension("pokemon." + extension) 
+                except Exception as e:
+                    console.print(f"Unable to load {extension}.", style="red")
+        
         else:
             print('The bot will launch without sysbot commands.')
     if autolauncher == 1:
         console.print("Autolauncher set to true.", style="green")
-        client.load_extension(f'pokemon.connection')
-        client.load_extension(f'pokemon.pokeinput')
-        client.load_extension(f'pokemon.queue')
-        client.load_extension(f'pokemon.remote')
-        client.load_extension(f'pokemon.trader')
-        client.load_extension(f'pokemon.advanced')          
+        for extension in pokemon:
+            try:
+                client.load_extension("pokemon." + extension)
+            except Exception as e:
+                console.print(f"Unable to load {extension}.", style="red")
     if autolauncher ==2:
         console.print('The bot will launch without sysbot commands.', style="blue")
 
@@ -129,15 +128,25 @@ async def on_guild_join(guild):
         break
     await guild.owner.send(embed = welcomer)
 
-##Cogs formation
-cogs = []
+# Build Plugins List
+plugins = []
+
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
-        cogs.append("cogs." + filename[:-3])
+        plugins.append("cogs." + filename[:-3])
 
+for filename in os.listdir('./helper'):
+    if filename.endswith('.py'):
+        if not filename.startswith('names') and not filename.startswith('solver'):
+            plugins.append("helper." + filename[:-3])
+            
+# Load Cogs
 if __name__ == '__main__':
-    for extension in cogs:
-        client.load_extension(extension)
+    for x in plugins:
+        try:
+            client.load_extension(x)
+        except Exception as e:
+            console.print(f"Unable to load {x}.", style="red")
 
 try:
     client.run('{}'.format(token))

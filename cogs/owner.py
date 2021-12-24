@@ -1,5 +1,12 @@
 import discord
 from discord.ext import commands
+from yaml import load
+import os
+import sys
+
+with open("advanced/sudo.yaml") as file:
+    data = load(file)
+    sudo = data["sudo"]
 
 class owner(commands.Cog):
     def __init__(self, client):
@@ -103,12 +110,21 @@ class owner(commands.Cog):
     async def botinvite(self, ctx):
         await ctx.message.author.send(f'https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=67496977&scope=bot%20applications.commands')
 
+    @commands.command()
+    async def restart(self, ctx):
+        information = await self.client.application_info()
+        if ctx.message.author == information.owner or ctx.message.author.id in sudo:
+            os.execv(sys.executable, ['python'] + sys.argv)
+        else: 
+            await ctx.send("You do not have permission to use this command.")
+
     @commands.command(aliases=['kill'])
     @commands.is_owner()
     async def shutdown(self, ctx):
         await ctx.message.add_reaction("✓")
         await ctx.send("Shutting down SysBot.py... bye bye")
         await self.client.logout()
+
 
 def setup(client):
     client.add_cog(owner(client))

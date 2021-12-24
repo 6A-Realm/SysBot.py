@@ -1,5 +1,6 @@
 from pokemon.pokeinput import queuelist
 from pokemon.connection import switch, serv
+from pokemon.botspeech import getready, failed, success, errormessage, lgpe, swsh
 import discord
 from discord.ext import commands, tasks
 from discord.utils import get
@@ -36,7 +37,7 @@ class trader(commands.Cog):
                 title = title[0:-1]
                 title = str(title,'utf-8')
                 if title == "0100000011D90000" or "010018E011D92000":
-                    await queued.send("Hello! Please prepare yourself, your trade is about to begin.")
+                    await queued.send(getready)
                     # Injection
                     filepath1 = f'Files/sysbot/requested-{user}.eb8'
                     if os.path.exists(filepath1):
@@ -254,10 +255,10 @@ class trader(commands.Cog):
                         with open(filepath1, 'rb') as f, open(filepath2, 'rb') as f2:
                             if f == f2:
                                 console.print(f'Failed to connect to {queued}.')
-                                await queued.send("Failed to connect and trade with user.")
+                                await queued.send(failed)
                             else:
                                 file = discord.File(filepath2)
-                                await queued.send(file=file, content="Here is what you traded to me:")
+                                await queued.send(file = file, content = success)
                                 console.print(f'Trade completed with {queued}.', style="green")
                         os.remove(filepath1)
 
@@ -284,14 +285,14 @@ class trader(commands.Cog):
                         logger.close()
                     else:
                         del queuelist[0]
-                        queued.send("An error has occured while processing your request. Please try again.")
+                        queued.send(errormessage)
 
                 if title == "010003F003A34000" or "0100187003A36000":
-                    await queued.send("SysBot.py is not made for LGPE yet.")
+                    await queued.send(lgpe)
                     del queuelist[0]
 
                 if title == "0100ABF008968000" or "01008DB008C2C000":
-                    await queued.send("SysBot.py is not made for SWSH yet.")
+                    await queued.send(swsh)
                     del queuelist[0]
 
 

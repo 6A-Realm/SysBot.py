@@ -1,3 +1,4 @@
+from asyncio.locks import _ContextManagerMixin
 from discord.ext import commands
 from yaml import load, dump
 import socket
@@ -32,6 +33,36 @@ except socket.error:
 class connection(commands.Cog):
     def __init__(self, client):
         self.client = client
+
+    @commands.group(invoke_without_command=True)
+    @commands.is_owner()
+    async def socket(self, ctx):
+        await ctx.send(f"Connected to {switchip}:{switchport}.")
+    
+    @socket.group()
+    @commands.is_owner()
+    async def close(self, ctx):
+        serv.shutdown(socket.SHUT_RDWR)
+        serv.close()
+        await ctx.send("Socket closed.")
+
+    @socket.group()
+    @commands.is_owner()
+    async def restart(self, ctx):
+        serv.shutdown(socket.SHUT_RDWR)
+        serv.close()
+        try:
+            serv.connect((switchip, switchport))
+            console.print(f"Successfully connected to {switchip}:{switchport}.", style="green")
+            await ctx.send("Socket restarted.")
+            if autoscreen == 2: 
+                switch(serv, "screenOff")
+                console.print("Switch screen was turned off.", style="green")
+                await ctx.send("Switch screen was turned off.")
+        except socket.error:
+            console.print(f"Unable to connect to {switchip}:{switchport}.", style="red")
+            await ctx.send(f"Unable to connect to {switchip}:{switchport}.")
+
 
 def setup(client):
     client.add_cog(connection(client))

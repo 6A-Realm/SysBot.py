@@ -34,7 +34,7 @@ class queued(commands.Cog):
         if ctx.message.author.id in queuelist:
             person = ctx.message.author.id
             position = queuelist.index(person)
-            if position > 0:
+            if position < 2:
                 ctx.send("Cannot remove you from the queue, currently being processed.")            
             else:
                 person = ctx.message.author.id
