@@ -1,6 +1,9 @@
 import discord
 from discord.ext import commands
 from yaml import load
+import datetime
+import itertools
+import psutil
 from discord_components import DiscordComponents, SelectOption, Select, Button, ButtonStyle
 import asyncio
 
@@ -124,8 +127,8 @@ class help(commands.Cog):
 
         # Embeds
         embed=discord.Embed(title=f'{self.client.user.name} Commands', description=f"Utilize the dropdown menu to select help pages.{ttr}", color= ctx.author.color)
-        embed.add_field(name="**Help Modules:**", value="**Page 1** | SysBot Commands\n**Page 2** | Pokemon Files Commands\n**Page 3** | Miscellaneous Commands\n**Page 4** | Channel Management Commands\n**Page 5** | Moderation Commands\n**Page 6** | Switch Commands\n**Page 7** | Owner Commands\n**Page 8** | Bot Management Commands", inline=True)
-        embed.add_field(name="📢 Bot News", value="⋅ Help command has been added.", inline=True)
+        embed.add_field(name="💁 **Help Modules:**", value="Page 1 | SysBot Commands\nPage 2 | Pokemon Files Commands\nPage 3 | Miscellaneous Commands\nPage 4 | Management Commands\nPage 5 | Moderation Commands\nPage 6 | Switch Commands\nPage 7 | Owner Commands\nPage 8 | Bot Management Commands", inline=True)
+        embed.add_field(name="ℹ️ **Bot Info:**", value=f"Servers: {len(self.client.guilds)}\nUsers: {len(self.client.users)}\nCommands: {len(self.client.commands)}\nCPU: {psutil.cpu_percent()}%\nMemory: {psutil.virtual_memory().percent}%", inline=True)
         sysbot=discord.Embed(title=f'SysBot Module', description=ttr, color=ctx.author.color)
         sysbot.add_field(name="SysBot Commands", value=sysbotval, inline=True)
         files=discord.Embed(title=f'Files Module', description=ttr, color=ctx.author.color)
@@ -165,7 +168,7 @@ class help(commands.Cog):
         ]
 
         message = await ctx.reply(embed=embed, components=components)
-
+            
         while(True):
             try:
                 interaction = await self.client.wait_for("select_option", check=None, timeout=10.0)

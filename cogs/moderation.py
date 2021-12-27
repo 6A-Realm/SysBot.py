@@ -162,7 +162,7 @@ class moderation(commands.Cog):
             await channel.set_permissions(member, overwrite=discord.PermissionOverwrite(send_messages = False), reason=reason)
         for channel in ctx.guild.voice_channels:
             await channel.set_permissions(member, overwrite=discord.PermissionOverwrite(speak=False), reason=reason)
-        await ctx.send(f"{member} was muted for {str(duration[:-1])} {longunit}.")
+        await ctx.send(f"{member} was muted for {time} {longunit}.")
 
     @commands.command()
     @commands.has_permissions(manage_roles=True)

@@ -1,17 +1,34 @@
-##This is your configuration file. 
-token: Token.Goes.Here
-botprefix: + #Include 0x
-color: 0xFFA500
+# This is your configuration file.
+
+# General configuration settings
+token: Token.goes.here
+botprefix: + 
+color: 0xFFA500 #Include 0x
 support-server-name: Pokemon EX Realm
 support-server-invite: https://discord.gg/BcDexg4jDu
 dmchannel: 908195847349612564
 botonname: genesect-LGPE-online #Dont include emojis in channel names
 botdownname: genesect-offline #Dont include emojis in channel names
-donation: https://paypal.com
+donation: None
+
+# General Switch settings
 ip: 10.0.0.164
 port: 6000
 directory: C:\Users\Laptop\Downloads\SysBot.py\res\screen.jpg
 
-##Advanced Settings
+##Advanced sysbot settings
 autolauncher: 2 # Key: 0 == means ask, 1 == yes, 2 == No
-autoscreen: 1 # Key: 1 == screen on, 2 == screen off
+autoscreen: 2 # Key: 1 == screen on, 2 == screen off
+system-screenshot: True # True == screen shots for remote commands, False == no screen shots
+
+# Dashboard configuration settings
+client-id: 882420846243749959
+client-secret: secret-id-here
+
+# Twitch settings
+toggle: 2 # Key: 1 means launch twitch bot, 2 means dont launch
+tmitoken:
+clientid:
+botnickname:
+botprefix:
+channel:

@@ -3,7 +3,7 @@ from discord import shard
 from discord.ext import commands
 import os
 import yaml
-from yaml import load, dump
+from yaml import load
 yaml.warnings({'YAMLLoadWarning': False})
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_option, create_choice
@@ -14,6 +14,7 @@ import asyncio
 from asyncio.tasks import create_task
 from asyncio.runners import run
 from discord.ext.commands import CommandNotFound
+import json
 
 ##Loads token and prefix from config file
 with open("config.yaml") as file:
@@ -26,8 +27,15 @@ with open("config.yaml") as file:
     dmchannel = data["dmchannel"]
     autolauncher = data["autolauncher"]
 
+# Fetch prefix 
+def get_prefix(client, message):
+    with open("res/prefix.json", "r") as f:
+        prefixes = json.load(f)
+    prefix = prefixes[str(message.guild.id)]
+    return commands.when_mentioned_or(*prefix)(client, message)
+
 ##Simple bot settings like mentioning as a prefix, settings all intents to true, deleting built in discord.py help command
-client = commands.AutoShardedBot(shard_count=1, description="SysBot 1.1.0", command_prefix=commands.when_mentioned_or(botprefix), intents=discord.Intents.all(), help_command = None, pm_help = False)
+client = commands.AutoShardedBot(shard_count=1, description="SysBot 1.1.0", command_prefix=get_prefix, intents=discord.Intents.all(), help_command = None, pm_help = False)
 slash = SlashCommand(client, sync_commands=True)
 pokemon = ["connection", "coreapi", "pokeinput", "queue", "remote", "trader", "advanced"]       
 console = Console()
@@ -140,6 +148,19 @@ async def on_guild_join(guild):
         await guild.owner.send(embed = welcomer)
     except:
         pass
+    with open("res/prefix.json", "r") as f:
+        prefixes = json.load(f)
+    prefixes[str(guild.id)] = botprefix
+    with open("res/prefix.json", "w") as f:
+        json.dump(prefixes, f, indent=4)
+
+@client.event
+async def on_guild_remove(guild):
+    with open("res/prefix.json", "r") as f:
+        prefixes = json.load(f)
+    prefixes.pop(str(guild.id))
+    with open("res/prefix.json", "w") as f:
+        json.dump(prefixes, f, indent=4)
 
 # Build Plugins List
 plugins = []

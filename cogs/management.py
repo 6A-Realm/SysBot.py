@@ -1,10 +1,23 @@
 import discord
 from discord.ext import commands
+import json
 import asyncio
 
 class admin(commands.Cog):
     def __init__(self, client):
         self.client = client
+
+    @commands.command()
+    async def changeprefix(self, ctx, new):
+        try:
+            with open("res/prefix.json", "r") as f:
+                prefixes = json.load(f)
+            prefixes[str(ctx.guild.id)] = new
+            with open("res/prefix.json", "w") as f:
+                json.dump(prefixes, f, indent=4)
+            await ctx.send(f"Prefix set to `{new}`.")
+        except:
+            await ctx.send("Unable to change the prefix at this time.")
 
     @commands.command(help="Prevents members from type in used channel.", brief='lock')
     @commands.has_permissions(manage_channels=True)
