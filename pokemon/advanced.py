@@ -28,7 +28,7 @@ class advanced(commands.Cog):
 # {-- Advanced Settings Commands --}
     @commands.command(pass_context=True)
     @commands.is_owner()
-    async def addsuo(self, ctx, user: discord.User):
+    async def addsudo(self, ctx, user: discord.User):
         person = user.id
         with open("advanced/sudo.yaml", encoding='utf-8') as file:
             data = load(file)

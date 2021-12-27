@@ -27,7 +27,7 @@ with open("config.yaml") as file:
     autolauncher = data["autolauncher"]
 
 ##Simple bot settings like mentioning as a prefix, settings all intents to true, deleting built in discord.py help command
-client = commands.AutoShardedBot(shard_count=1, description="Sysbot ALPHA", command_prefix=commands.when_mentioned_or(botprefix), intents=discord.Intents.all(), help_command = None, pm_help = False)
+client = commands.AutoShardedBot(shard_count=1, description="SysBot 1.1.0", command_prefix=commands.when_mentioned_or(botprefix), intents=discord.Intents.all(), help_command = None, pm_help = False)
 slash = SlashCommand(client, sync_commands=True)
 pokemon = ["connection", "coreapi", "pokeinput", "queue", "remote", "trader", "advanced"]       
 console = Console()
@@ -95,7 +95,17 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send(f"You're missing the following permissions: \n**{', '.join(error.missing_permissions)}**")
     if isinstance(error, discord.ext.commands.errors.CheckFailure):
-        await ctx.send("You do not have permission to use this command.")    
+        await ctx.send("You do not have permission to use this command.")
+    if isinstance(error, discord.ext.commands.errors.MemberNotFound):
+        await ctx.send("This member was not found.") 
+    if isinstance(error, discord.ext.commands.errors.GuildNotFound):
+        await ctx.send("This guild was not found.")      
+    if isinstance(error, discord.ext.commands.errors.UserNotFound):
+        await ctx.send("This user was not found.")  
+    if isinstance(error, discord.ext.commands.errors.ChannelNotFound):
+        await ctx.send("This channel was not found.")  
+    if isinstance(error, discord.ext.commands.errors.RoleNotFound):
+        await ctx.send("This role was not found.")   
     if isinstance(error, commands.BotMissingPermissions):
         await ctx.send(f"I'm missing the following permissions: \n**{', '.join(error.missing_permissions)}**")
     if isinstance(error, commands.NotOwner):
@@ -126,7 +136,10 @@ async def on_guild_join(guild):
         if channel.permissions_for(guild.me).send_messages:
             await channel.send(embed = welcomer)
         break
-    await guild.owner.send(embed = welcomer)
+    try:
+        await guild.owner.send(embed = welcomer)
+    except:
+        pass
 
 # Build Plugins List
 plugins = []
@@ -140,7 +153,7 @@ for filename in os.listdir('./helper'):
         if not filename.startswith('names') and not filename.startswith('solver'):
             plugins.append("helper." + filename[:-3])
             
-# Load Cogs
+# Load plugins
 if __name__ == '__main__':
     for x in plugins:
         try:

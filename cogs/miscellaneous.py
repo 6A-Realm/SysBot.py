@@ -32,13 +32,10 @@ class miscellaneous(commands.Cog):
     @commands.command()
     @commands.guild_only()
     async def support(self, ctx):
-        await ctx.send(donation)
-
-    @commands.command()
-    @commands.guild_only()
-    async def botstatus(self, ctx, user: discord.User):
-        embed = discord.Embed(title=f"{user.name} is ", description= f'{user.name} is {user.activities[0].name}.', color=0xFFFFF6)
-        await ctx.send(embed = embed)
+        if donation != "None":
+            await ctx.send(donation)
+        else: 
+            await ctx.send("There is no donation link for this bot.")
 
     @commands.command()
     async def source(self, ctx):
@@ -76,6 +73,12 @@ class miscellaneous(commands.Cog):
         embed=discord.Embed(title="How To Use The LGPE Sysbot", url="https://www.youtube.com/watch?v=0dS2QTxqFnI", description="This is a [guide](https://www.youtube.com/watch?v=0dS2QTxqFnI) on how to use the LGPE sysbot.\nPlease watch the complete video on how to use the bots.\nAll bots are in this bots official server.", color=ctx.author.color)
         embed.set_thumbnail(url="https://i.ytimg.com/vi/1WbOHrQfMlc/mqdefault.jpg")
         await ctx.send(embed=embed)
-        
+
+    @commands.command()
+    @commands.guild_only()
+    async def servericon(self, ctx):
+        icon = ctx.guild.icon_url
+        await ctx.send(icon)    
+
 def setup(client):
     client.add_cog(miscellaneous(client))

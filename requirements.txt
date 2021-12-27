@@ -1,8 +1,7 @@
-aiohttp
-aiohttp-json-rpc
 asyncio
 colorama
 discord
+discord-components
 discord-py-slash-command
 discord.py>=1.6.0
 DiscordUtils

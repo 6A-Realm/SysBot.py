@@ -58,20 +58,11 @@ class owner(commands.Cog):
     @commands.command(help="Create a guild.", brief="createguild <prefered name>")
     @commands.is_owner()
     async def createguild(self, ctx, *, name):
-        count = str(len(self.client.guilds))
-        if count > 10:
-            await ctx.send("{self.client.name} is in {count} servers. A bot is required to be in 10 or less servers to make a guild.")
-        else:
-            guild = self.client.get_guild(name)
-            invitelink = ""
-            i = 0
-            while invitelink == "":
-                channel = guild.text_channels[i]
-                link = await channel.create_invite(max_age=0,max_uses=0)
-                invitelink = str(link)
-                i += 1
-                await self.client.create_guild(name)
-                await ctx.send(f"I created {name}.\n{invitelink}")
+        try:
+            await self.client.create_guild(name)
+            await ctx.send(f"I created {name}.")
+        except Exception as e:
+            await ctx.send(f"An error occured while creating {name}: {e}")
 
     @commands.command(help="deletes server from directed guild.", brief="delete <serverid>")
     @commands.is_owner()
@@ -114,6 +105,7 @@ class owner(commands.Cog):
     async def restart(self, ctx):
         information = await self.client.application_info()
         if ctx.message.author == information.owner or ctx.message.author.id in sudo:
+            await ctx.message.add_reaction("✓")
             os.execv(sys.executable, ['python'] + sys.argv)
         else: 
             await ctx.send("You do not have permission to use this command.")
@@ -122,7 +114,7 @@ class owner(commands.Cog):
     @commands.is_owner()
     async def shutdown(self, ctx):
         await ctx.message.add_reaction("✓")
-        await ctx.send("Shutting down SysBot.py... bye bye")
+        await ctx.reply("Shutting down SysBot.py... bye bye")
         await self.client.logout()
 
 
