@@ -1,4 +1,3 @@
-import os
 from twitchio.ext import commands
 import yaml
 from yaml import load
