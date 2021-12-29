@@ -1,8 +1,5 @@
-
 # SysBot.py
 [![License](https://img.shields.io/badge/license-GNU%20Affero%20General%20Public%20License%20Version%203%20or%20Later-blue.svg)]()
-
-A sys-botbase client for remote control automation of Nintendo Switch consoles. Based on SysBot.NET, written in python. 
 
 ## Installation in 10 Easy Steps:
 1. Clone or download this repository and extracting the zip:
@@ -14,7 +11,7 @@ A sys-botbase client for remote control automation of Nintendo Switch consoles. 
 7. Open a command prompt by pressing the buttons `Windows Key` + `r`.
 8. Navigate to the SysBot.py-main folder using the `cd pathway` command.
 9. Install the requirements using the command `pip install -r requirements.txt`.
-10. Once all steps are completed, you can turn on the bot by using the command `py sysbot.py` or by double clicking on the sysbot.py file.
+10. Once all steps are completed, you can turn on the bot by using the command `py main.py` or by double clicking on the sysbot.py file.
 
 ## Should I use this bot?
 If you want to use this for SysBot:

@@ -1,6 +1,6 @@
 import discord
 from discord import shard
-from discord.ext import commands
+from discord.ext import commands, ipc
 import os
 import yaml
 from yaml import load
