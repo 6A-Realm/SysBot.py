@@ -1,6 +1,6 @@
 from pokemon.pokeinput import queuelist
 from pokemon.connection import switch, serv
-from pokemon.botspeech import getready, failed, success, errormessage, lgpe, swsh
+from pokemon.values import getready, failed, success, errormessage, lgpe, swsh, b1s1
 import discord
 from discord.ext import commands, tasks
 from discord.utils import get
@@ -27,10 +27,13 @@ class trader(commands.Cog):
         if len(queuelist) > 0:
             user = queuelist[0]
             queued = get(self.client.get_all_members(), id=user)
+
+            # Stay awake protocol
             if queued == None:
                 while (True):
                     switch(serv, "click B")
                     await asyncio.sleep(60)
+
             if queued != None:
                 switch(serv, "getTitleID")
                 title = serv.recv(689)
@@ -38,6 +41,7 @@ class trader(commands.Cog):
                 title = str(title,'utf-8')
                 if title == "0100000011D90000" or "010018E011D92000":
                     await queued.send(getready)
+
                     # Injection
                     filepath1 = f'Files/sysbot/requested-{user}.eb8'
                     if os.path.exists(filepath1):
@@ -46,7 +50,7 @@ class trader(commands.Cog):
                         injection = str(binascii.hexlify(injection), "utf-8")
 
                         # This is the part I need that way I can read the file and inject it into box 1 slot 1
-                        switch(serv, f"pointerPoke 0x{injection} 0x4E34DD0 0xB8 0x10 0xA0 0x20 0x20 0x20")
+                        switch(serv, f"pointerPoke 0x{injection} {b1s1}")
 
                         # Opening trade menu to internet
                         console.log(f"Opening the trade menu. Queuing: {user}.", style="green")
@@ -70,137 +74,27 @@ class trader(commands.Cog):
 
                         # Trade code generator || There is probably a more efficent way
                         console.print("Generating 8 digit code.", style="red")
+
                         tradecode = []
-                        for i in range(8): 
+                        for c in range(8): 
                             code = random.randint(0,8) 
                             tradecode.append(str(code))
-                            if code == 1:
-                                switch(serv, "click A")
-                                await asyncio.sleep(3)
-                            if code == 2:
-                                switch(serv, "setStick RIGHT 0x7FFF 0x0")
-                                switch(serv, "setStick RIGHT 0x0 0x0")
-                                await asyncio.sleep(3)
-                                switch(serv, "click A")
-                                await asyncio.sleep(3)
-                                switch(serv, "setStick RIGHT -0x8000 0x0")
-                                switch(serv, "setStick RIGHT 0x0 0x0")
-                                await asyncio.sleep(3)
-                            if code == 3:
-                                for x in range(2):
-                                    switch(serv, "setStick RIGHT 0x7FFF 0x0")
-                                    switch(serv, "setStick RIGHT 0x0 0x0")
-                                    await asyncio.sleep(3)
-                                switch(serv, "click A")
-                                await asyncio.sleep(3)
-                                for x in range(2):
-                                    switch(serv, "setStick RIGHT -0x8000 0x0")
-                                    switch(serv, "setStick RIGHT 0x0 0x0")
-                                    await asyncio.sleep(3)
-                            if code == 4:
-                                switch(serv, "setStick RIGHT yVal -0x8000")
-                                switch(serv, "setStick RIGHT yVal 0x0000")
-                                await asyncio.sleep(3)                           
-                                switch(serv, "click A")
-                                await asyncio.sleep(3)     
-                                switch(serv, "setStick RIGHT yVal 0x7FFF")
-                                switch(serv, "setStick RIGHT yVal 0x0000")
-                                await asyncio.sleep(3)
-                            if code == 5:
-                                switch(serv, "setStick RIGHT yVal -0x8000")
-                                switch(serv, "setStick RIGHT yVal 0x0000")
-                                await asyncio.sleep(3)  
-                                switch(serv, "setStick RIGHT 0x7FFF 0x0")
-                                switch(serv, "setStick RIGHT 0x0 0x0")
-                                await asyncio.sleep(3)
-                                switch(serv, "click A")
-                                await asyncio.sleep(3)
-                                switch(serv, "setStick RIGHT -0x8000 0x0")
-                                switch(serv, "setStick RIGHT 0x0 0x0")
-                                await asyncio.sleep(3)
-                                switch(serv, "setStick RIGHT yVal 0x7FFF")
-                                switch(serv, "setStick RIGHT yVal 0x0000")
-                                await asyncio.sleep(3)
-                            if code == 6:
-                                switch(serv, "setStick RIGHT yVal -0x8000")
-                                switch(serv, "setStick RIGHT yVal 0x0000")
-                                await asyncio.sleep(3)  
-                                for x in range(2):
-                                    switch(serv, "setStick RIGHT 0x7FFF 0x0")
-                                    switch(serv, "setStick RIGHT 0x0 0x0")
-                                    await asyncio.sleep(3)
-                                switch(serv, "click A")
-                                await asyncio.sleep(3)
-                                for x in range(2):
-                                    switch(serv, "setStick RIGHT -0x8000 0x0")
-                                    switch(serv, "setStick RIGHT 0x0 0x0")
-                                    await asyncio.sleep(3) 
-                                switch(serv, "setStick RIGHT yVal 0x7FFF")
-                                switch(serv, "setStick RIGHT yVal 0x0000")
-                                await asyncio.sleep(3)  
-                            if code == 7:
-                                for x in range(2):
-                                    switch(serv, "setStick RIGHT yVal -0x8000")
-                                    switch(serv, "setStick RIGHT yVal 0x0000")
-                                    await asyncio.sleep(3)                           
-                                switch(serv, "click A")
-                                await asyncio.sleep(3)   
-                                for x in range(2):
-                                    switch(serv, "setStick RIGHT yVal 0x7FFF")
-                                    switch(serv, "setStick RIGHT yVal 0x0000")
-                                    await asyncio.sleep(3)
-                            if code == 8:
-                                for x in range(2):
-                                    switch(serv, "setStick RIGHT yVal -0x8000")
-                                    switch(serv, "setStick RIGHT yVal 0x0000")
-                                    await asyncio.sleep(3)  
-                                switch(serv, "setStick RIGHT 0x7FFF 0x0")
-                                switch(serv, "setStick RIGHT 0x0 0x0")
-                                await asyncio.sleep(3)
-                                switch(serv, "click A")
-                                await asyncio.sleep(3)
-                                switch(serv, "setStick RIGHT -0x8000 0x0")
-                                switch(serv, "setStick RIGHT 0x0 0x0")
-                                await asyncio.sleep(3)
-                                for x in range(2):
-                                    switch(serv, "setStick RIGHT yVal 0x7FFF")
-                                    switch(serv, "setStick RIGHT yVal 0x0000")
-                                    await asyncio.sleep(3)
-                            if code == 9:
-                                for x in range(2):
-                                    switch(serv, "setStick RIGHT yVal -0x8000")
-                                    switch(serv, "setStick RIGHT yVal 0x0000")
-                                    await asyncio.sleep(3)  
-                                for x in range(2):
-                                    switch(serv, "setStick RIGHT 0x7FFF 0x0")
-                                    switch(serv, "setStick RIGHT 0x0 0x0")
-                                    await asyncio.sleep(3)
-                                switch(serv, "click A")
-                                await asyncio.sleep(3)
-                                for x in range(2):
-                                    switch(serv, "setStick RIGHT -0x8000 0x0")
-                                    switch(serv, "setStick RIGHT 0x0 0x0")
-                                    await asyncio.sleep(3) 
-                                for x in range(2):
-                                    switch(serv, "setStick RIGHT yVal 0x7FFF")
-                                    switch(serv, "setStick RIGHT yVal 0x0000")
-                                    await asyncio.sleep(3)  
-                            if code == 0:
-                                switch(serv, "setStick RIGHT 0x7FFF 0x0")
-                                switch(serv, "setStick RIGHT 0x0 0x0")
-                                await asyncio.sleep(1)
-                                for x in range(3):
-                                    switch(serv, "setStick RIGHT yVal -0x8000")
-                                    switch(serv, "setStick RIGHT yVal 0x0000")
-                                    await asyncio.sleep(3) 
-                                switch(serv, "click A") 
-                                for x in range(3):
-                                    switch(serv, "setStick RIGHT yVal 0x7FFF")
-                                    switch(serv, "setStick RIGHT yVal 0x0000")
-                                    await asyncio.sleep(3)  
-                                switch(serv, "setStick RIGHT -0x8000 0x0")
-                                switch(serv, "setStick RIGHT 0x0 0x0")
-                                await asyncio.sleep(3) 
+                            if (code == 1 or code == 4 or code == 7):
+                                X = 500
+                            if (code == 2 or code == 5 or code == 8 or code == 0):
+                                X = 700
+                            if (code == 3 or code == 6 or code == 9):
+                                X = 800
+                            if (code == 1 or code == 2 or code == 3):
+                                Y = 450
+                            if (code == 4 or code == 5 or code == 6):
+                                Y = 500
+                            if (code == 7 or code == 8 or code == 9):
+                                Y = 550
+                            if (code == 0):
+                                Y = 600
+                            switch(serv, f"touch {X} {Y}")
+                            await asyncio.sleep(0.5)
 
                         tradecode.insert(4, '-')
                         await queued.send(f'Your trade code is: `{"".join(ch for ch in tradecode)}`.')
@@ -230,9 +124,6 @@ class trader(commands.Cog):
                             switch(serv, "click A")
                             await asyncio.sleep(3)
                         switch(serv, "click A")
-
-                        # Increased for trade scene
-                        # Make sure you have your pokedex completed.
                         await asyncio.sleep(60)
 
                         # Add "Here is what you traded me:" here
@@ -241,8 +132,7 @@ class trader(commands.Cog):
                         ## https://github.com/architdate/PKHeX-Plugins/blob/dff2ba71603c6e19d75a12dab94f50f5b2ef8402/PKHeX.Core.Injection/LiveHeXOffsets/RamOffsets.cs#L155
                         ## LiveHeXVersion.BD_v111 => ("[[[[main+4C1DCF8]+B8]+10]+A0]+20", 40),
                         ## Conversion "pointerPeek 0x4C1DCF8 0xB8 0x10 0xA0 0x20" 
-                        # Thank you Manu for teaching me
-                        switch(serv, "pointerPeek 344 0x4E34DD0 0xB8 0x10 0xA0 0x20 0x20 0x20")
+                        switch(serv, f"pointerPeek 344 {b1s1}")
                         await asyncio.sleep(1)
                         read = serv.recv(689)
                         read = read[0:-1]

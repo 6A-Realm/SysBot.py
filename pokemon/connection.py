@@ -1,6 +1,5 @@
-from asyncio.locks import _ContextManagerMixin
 from discord.ext import commands
-from yaml import load, dump
+from yaml import load
 import socket
 from rich.console import Console
 console = Console()
@@ -23,6 +22,8 @@ serv.settimeout(15)
 try:
     serv.connect((switchip, switchport))
     console.print(f"Successfully connected to {switchip}:{switchport}.", style="green")
+    switch(serv, "detachController")
+    switch(serv, "controllerType 1")
     if autoscreen == 2: 
         switch(serv, "screenOff")
         console.print("Switch screen was turned off.", style="green")

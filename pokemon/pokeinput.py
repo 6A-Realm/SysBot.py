@@ -52,34 +52,21 @@ class request(commands.Cog):
 
                         if attachment.filename.endswith((".eb8")):
 
-                            # Legality check by GriffinG1: https://github.com/GriffinG1/FlagBot/blob/22da7ae04e5f5383eb23b7aa75cc9fab7d90b355/addons/pkhex.py#L221
-                            #r = await self.process_file(ctx, ctx.message.attachments, "api/bot/check")
-                            #if r == 400:
-                            #    return
-                            #rj = r[1]
-                            #reasons = rj["IllegalReasons"].split("\n")
-                            #if reasons[0] == "Legal!":
-
-                                # Logs in console
-                                os.system('cls||clear')
-                                await attachment.save(f"Files/sysbot/requested-{ctx.message.author.id}.eb8")
-                                prioritycheck = discord.utils.find(lambda r: r.id == priority, ctx.message.guild.roles)
-                                if prioritycheck in ctx.message.author.roles:
-                                    queuelist.insert(0, ctx.message.author.id)
-                                else:
-                                    queuelist.append(ctx.message.author.id)
-                                console.log(f'{ctx.message.author.name} has been added to the queue', style="blue")
-                                await ctx.message.delete()
-                                await ctx.send(f'{ctx.message.author.name} has been added to the queue. Current queue length: {len(queuelist)}.')
-                                logger = open("logs.txt", "a")
-                                logtime = datetime.datetime.now()
-                                logger.write(logtime + " || " + {ctx.message.author.name} + " has requested to trade with the bot" + "\n")
-                                logger.close()
-
-                            #else:
-                                #embed = discord.Embed(title="Your pokemon was illegal", description="", colour=discord.Colour.red())
-                                #embed = self.list_to_embed(embed, reasons)
-                                #await ctx.send(embed=embed)
+                            # Logs in console
+                            os.system('cls||clear')
+                            await attachment.save(f"Files/sysbot/requested-{ctx.message.author.id}.eb8")
+                            prioritycheck = discord.utils.find(lambda r: r.id == priority, ctx.message.guild.roles)
+                            if prioritycheck in ctx.message.author.roles:
+                                queuelist.insert(0, ctx.message.author.id)
+                            else:
+                                queuelist.append(ctx.message.author.id)
+                            console.log(f'{ctx.message.author.name} has been added to the queue', style="blue")
+                            await ctx.message.delete()
+                            await ctx.send(f'{ctx.message.author.name} has been added to the queue. Current queue length: {len(queuelist)}.')
+                            logger = open("logs.txt", "a")
+                            logtime = datetime.datetime.now()
+                            logger.write(logtime + " || " + {ctx.message.author.name} + " has requested to trade with the bot" + "\n")
+                            logger.close()
 
                         else:
                             await ctx.channel.send("Unable to trade. Ensure your file ends in `.eb8` and is legal.")

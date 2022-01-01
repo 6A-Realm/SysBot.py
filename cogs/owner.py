@@ -99,7 +99,8 @@ class owner(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def botinvite(self, ctx):
-        embed = discord.Embed(title="Bot Invites", description=f"Invite the bot:\n[Minimal Permissions](https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=67496977)\n[With Slash commands](https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=67496977&scope=bot%20applications.commands)\n[Admin Permissions](https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=8&scope=bot%20applications.commands)]", colour=discord.Colour.dark_blue())
+        embed = discord.Embed(title="Bot Invites", description=f"Invite the bot:\n[Minimal Permissions](https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=67496977)\n[With Slash commands](https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=67496977&scope=bot%20applications.commands)\n[Admin Permissions](https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=8&scope=bot%20applications.commands)", colour=discord.Colour.dark_blue())
+        await ctx.message.add_reaction("✓")
         await ctx.message.author.send(embed = embed)
 
     @commands.command()

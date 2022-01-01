@@ -157,6 +157,9 @@ class miscellaneous(commands.Cog):
         member = ctx.guild.me
         await self.say_permissions(ctx, member, channel)
 
+    @commands.command()
+    async def sysbotbase(self, ctx):
+        await ctx.reply("https://github.com/olliz0r/sys-botbase/releases/latest")
 
 def setup(client):
     client.add_cog(miscellaneous(client))

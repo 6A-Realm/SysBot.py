@@ -1,3 +1,4 @@
+import asyncio
 import discord
 from discord.ext import commands
 import os
@@ -8,22 +9,26 @@ class pkhex(commands.Cog):
         self.client = client
 
 # Settings for pk8 bot. Do not change or no files will be found
-    def get_name(self, filepath):
+    def namek8(self, filepath):
         with open(filepath, "rb") as f:
             data = f.read()[88:112]
             name = data.decode("utf-16", "ignore").replace("\0", "")
-
         return name
 
     @commands.command()
     @commands.guild_only()
     async def pk8(self, ctx, *, query):
+        check = False
         for filepath in glob.glob(f"Files/pk8/*.pk8"):
-            if (self.get_name(filepath).lower() == query.lower()):
+            if (self.namek8(filepath).lower() == query.lower()):
                 await ctx.send(file=discord.File(filepath))
-            else:
-                await ctx.send("The `pk8` for this pokemon does not exist yet.")
-
+                check = True
+        await asyncio.sleep(10)
+        if check == False:
+            await ctx.send("The `pk8` for this pokemon does not exist yet.")
+            return
+        else:
+            return
 
     @commands.command()
     @commands.guild_only()
@@ -34,7 +39,6 @@ class pkhex(commands.Cog):
         else:
             await ctx.send("The `pk7` for this pokemon does not exist yet.")
 
-
     @commands.command()
     @commands.guild_only()
     async def pk6(self, ctx, pokemon_name):
@@ -43,7 +47,6 @@ class pkhex(commands.Cog):
             await ctx.send(file=discord.File(filepath))
         else:
             await ctx.send("The `pk6` for this pokemon does not exist yet.")
-
 
     @commands.command()
     @commands.guild_only()
@@ -54,7 +57,6 @@ class pkhex(commands.Cog):
         else:
             await ctx.send("The `pb7` for this pokemon does not exist yet.")
 
-
     @commands.command()
     @commands.guild_only()
     async def ek8(self, ctx, pokemon_name):
@@ -64,11 +66,9 @@ class pkhex(commands.Cog):
         else:
             await ctx.send("The `ek8` for this pokemon does not exist yet.")
 
-
     @commands.command()
     @commands.guild_only()
     async def submit(self, ctx):
-        files = []
         for attachment in ctx.message.attachments:
             if attachment.filename.endswith((".pk6", ".pk7", ".pk8")):
                 await attachment.save("Files/submitted/"+attachment.filename)

@@ -54,10 +54,6 @@ Feel free to fork and do the stuff I couldn't.
 
 ## Credits:
 - [olliz0r's sys-botbase](https://github.com/olliz0r/sys-botbase): Switch automation and pokemon injection.
-- [kwsch](https://github.com/kwsch/SysBot.NET): Offsets needed for b1s1.
-- [Manu098vm](https://github.com/Manu098vm): Teaching me how to use offsets correctly.
-- [GriffinG1](https://github.com/GriffinG1/FlagBot): Stole some stuff from Flagbot that use CoreAPI.
-- Santa, Bewears, and Bones: Giving me ideas, fixing errors, and troubleshooting.
 
 ## License:
 [AGPLv3+](https://www.gnu.org/licenses/agpl-3.0.en.html)

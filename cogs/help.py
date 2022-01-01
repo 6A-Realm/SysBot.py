@@ -171,7 +171,7 @@ class help(commands.Cog):
             
         while(True):
             try:
-                interaction = await self.client.wait_for("select_option", check=None, timeout=10.0)
+                interaction = await self.client.wait_for("select_option", check=None, timeout=30)
                 if interaction.values[0] == "sysbot":
                     await interaction.respond(type=7, ephemeral=False, embed=sysbot)
                 if interaction.values[0] == "files":
