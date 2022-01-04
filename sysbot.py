@@ -28,7 +28,7 @@ def get_prefix(client, message):
     return commands.when_mentioned_or(*prefix)(client, message)
 
 ##Simple bot settings like mentioning as a prefix, settings all intents to true, deleting built in discord.py help command
-client = commands.AutoShardedBot(description="SysBot 1.1.0", command_prefix=get_prefix, intents=discord.Intents.all(), help_command = None, pm_help = False)
+client = commands.AutoShardedBot(description="SysBot 1.1.4", command_prefix=get_prefix, intents=discord.Intents.all(), help_command = None, pm_help = False)
 slash = SlashCommand(client, sync_commands=True)
 pokemon = ["connection", "pokeinput", "queue", "remote", "trader", "advanced"]       
 console = Console()

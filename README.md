@@ -40,7 +40,7 @@ Ask nicely and I might have an answer
 Feel free to fork and do the stuff I couldn't.
 
 ### Touchscreen input:
-- [ ] More accurate trade code input
+- [x] More accurate trade code input
 ### CoreApi
 - [ ] Encryption and Decryption
 - [ ] Legality Checks

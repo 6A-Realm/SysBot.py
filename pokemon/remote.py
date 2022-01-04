@@ -49,12 +49,6 @@ class remote(commands.Cog):
         return commands.check(check)
 
 # {-- Remote Control --}
-    '''elif check == "spamb":
-            for b in range(15):
-                switch(serv, "click B")
-                await asyncio.sleep(1)
-            await protocol(ctx)'''
-
 # {-- Select, Directional, and Menu Buttons --}
     @commands.command()
     @lock()
@@ -101,6 +95,14 @@ class remote(commands.Cog):
             
         else:
             await ctx.send(embed=embed)
+
+    @commands.command()
+    @lock()
+    async def spamb(self, ctx):
+        for b in range(15):
+            switch(serv, "click B")
+            await asyncio.sleep(1)
+        await protocol(ctx)
 
 # { -- Pokemon commands --}
     @commands.command()
