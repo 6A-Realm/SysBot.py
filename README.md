@@ -1,37 +1,26 @@
 # SysBot.py
 [![License](https://img.shields.io/badge/license-GNU%20Affero%20General%20Public%20License%20Version%203%20or%20Later-blue.svg)]()
 
-## Installation in 10 Easy Steps:
-1. Clone or download this repository and extracting the zip:
-2. Install <a href="https://www.python.org/">python</a>. Make sure you click "Add to PATH".
-3. Create a bot on the [Discord Developer Portal](https://discordapp.com/developers/).
-4. Turn on **PRESENCE INTENT** and **SERVER MEMBERS INTENT** in the bot's settings page on the developer portal.
-5. Install the latest release of [sys-botbase](https://github.com/olliz0r/sys-botbase/releases) directly onto your switch for Pokemon trading functionality.
-6. Fill out **config.example.yaml** and rename to **config.yaml**.
-7. Open a command prompt by pressing the buttons `Windows Key` + `r`.
-8. Navigate to the SysBot.py-main folder using the `cd pathway` command.
-9. Install the requirements using the command `pip install -r requirements.txt`.
-10. Once all steps are completed, you can turn on the bot by using the command `py main.py` or by double clicking on the sysbot.py file.
-
 ## Should I use this bot?
 If you want to use this for SysBot:
 
-	No. It barely works, I did it for fun. Use [SysBot.NET](https://github.com/kwsch/SysBot.NET) instead.
+	Personally, no. It barely works, I did it for fun.
 	- There is no legality checks and there is no pkx or pbx conversion. 
 	- I did not implement anything with offsets other than b1s1.
-	- This was more for fun. Use the other bot for actual SysBot use.
     
 If you want to use this for other features:
 
-	I personally use it along side SysBot.NET.
-	It has some nice features, especially if the bot is used in multiple servers.
+	- I personally use it along side SysBot.NET.
+	- It has some nice features, especially if the bot is used in multiple servers.
+    - Gives you way more control over your server and your bot. 
+    - Easier remote control handling and debugging. 
 
 ## Something doesn't work correctly:
 Not everything is tested and I doubt everything will work as expected.
 - If you want to open an issue then I might take a look at it. If you want to fork and fix then I could always pull as well.
 
 ## Support:
-Ask nicely and I might have an answer
+Read the [Wiki](https://github.com/6A-Realm/SysBot.py/wiki) before asking questions. If you still cannot figure it out, ask nicely and I might have an answer.
 
 
 [<img src="https://canary.discordapp.com/api/guilds/771539948687589386/widget.png?style=banner2">](https://discord.gg/TwyCFr5WDY)
