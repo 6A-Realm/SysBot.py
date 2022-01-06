@@ -1,3 +1,5 @@
+print("Launching SysBot.py...")
+
 import discord
 from discord import shard
 from discord.ext import commands
@@ -37,6 +39,7 @@ console = Console()
 @client.event
 async def on_ready():
     ctypes.windll.kernel32.SetConsoleTitleW('{0.user}'.format(client) + ' ALPHA')
+    console.clear()
     print(f'''{Fore.LIGHTBLUE_EX}
    _____           ____        _                 
   / ____|         |  _ \      | |                

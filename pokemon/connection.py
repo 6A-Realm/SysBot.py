@@ -2,7 +2,10 @@ from discord.ext import commands
 from yaml import load
 import socket
 from rich.console import Console
+from pokemon.values import p, e, sw, sh, bd, sp
 console = Console()
+
+game = "Pokemon"
 
 # Loads switch ip and port from config file
 with open("config.yaml") as file:
@@ -22,14 +25,29 @@ serv.settimeout(15)
 try:
     serv.connect((switchip, switchport))
     console.print(f"Successfully connected to {switchip}:{switchport}.", style="green")
+    
     switch(serv, "detachController")
     switch(serv, "controllerType 1")
+
+    switch(serv, "getTitleID")
+    title = serv.recv(689)
+    title = title[0:-1]
+    title = str(title,'utf-8')
+    if title ==  bd or title == sp:
+        game = "BDSP"    
+    elif title ==  sw or title == sh:
+        game = "SWSH"  
+    elif title ==  p or title == e:
+        game = "LGPE"  
+    else:
+        game = "Pokemon"
+
     if autoscreen == 2: 
         switch(serv, "screenOff")
         console.print("Switch screen was turned off.", style="green")
 except socket.error:
     console.print(f"Unable to connect to {switchip}:{switchport}.", style="red")
-    console.print(f"\nClick here to follow the connection troubleshooting guide by the official sysbot team.\nhttps://github.com/kwsch/SysBot.NET/wiki/Troubleshooting-Connection-Errors")
+    console.print(f"\nClick here to follow the connection troubleshooting guide.\nhttps://github.com/6A-Realm/SysBot.py/wiki/Connection-Issues")
 
 class connection(commands.Cog):
     def __init__(self, client):

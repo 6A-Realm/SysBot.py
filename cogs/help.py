@@ -39,7 +39,7 @@ filesval = str(f"""
 """)
 
 miscellaneousval = str(f"""
- ⋅ prefix: Fetchs the bot's prefix.
+ ⋅ prefix: Fetches the bot's prefix.
  ⋅ latency: Reports latency.
  ⋅ invite: Sends invite link to bot's home server.
  ⋅ support: Sends bot's donation link.
