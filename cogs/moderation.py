@@ -18,12 +18,11 @@ class moderation(commands.Cog):
     @commands.command()
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member, *, reason = None):
-        if reason == None:
+        if reason is None:
             reason = 'No reason given'
         author = ctx.message.author
-        if member:
-            if author.top_role.position < member.top_role.position + 1:
-                return await ctx.send("You cannot kick members that have a higher role than you.")
+        if member and author.top_role.position < member.top_role.position + 1:
+            return await ctx.send("You cannot kick members that have a higher role than you.")
         if member.permissions_in(ctx.channel).kick_members:
             return await ctx.send("That user is a mod/admin.")
         else:
@@ -48,7 +47,7 @@ class moderation(commands.Cog):
     @commands.command()
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member, reason = None):
-        if reason == None:
+        if reason is None:
             reason = 'No reason given'
         author = ctx.message.author
         if member:
@@ -68,7 +67,7 @@ class moderation(commands.Cog):
     @commands.command()
     @commands.has_permissions(ban_members=True)
     async def shareban(self, ctx, member: discord.Member, *, reason = None):
-        if reason == None:
+        if reason is None:
             reason = 'No reason given'
         author = ctx.message.author
         if member:
@@ -136,14 +135,13 @@ class moderation(commands.Cog):
         role = discord.utils.find(lambda m: rolename.lower() in m.name.lower(), ctx.message.guild.roles)
         if not role:
             return await ctx.send('That role does not exist.')
-        else:
-            await member.remove_roles(role)
-            await ctx.send(f'Removed: `{role.name}`')
+        await member.remove_roles(role)
+        await ctx.send(f'Removed: `{role.name}`')
 
     @commands.command()
     @commands.has_permissions(manage_roles=True)
     async def mute(self, ctx, member:discord.Member, duration, *, reason = None):
-        if reason == None:
+        if reason is None:
             reason = 'No reason given'
         unit = duration[-1]
         if unit == 's':
@@ -167,7 +165,7 @@ class moderation(commands.Cog):
     @commands.command()
     @commands.has_permissions(manage_roles=True)
     async def unmute(self, ctx, member:discord.Member, *, reason = None):
-        if reason == None:
+        if reason is None:
             reason = 'No reason given'
         for channel in ctx.message.guild.channels:
             await channel.set_permissions(member, overwrite=None, reason=reason)

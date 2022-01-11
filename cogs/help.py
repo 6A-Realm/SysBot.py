@@ -1,8 +1,6 @@
 import discord
 from discord.ext import commands
 from yaml import load
-import datetime
-import itertools
 import psutil
 from discord_components import DiscordComponents, SelectOption, Select, Button, ButtonStyle
 import asyncio
@@ -127,67 +125,75 @@ class help(commands.Cog):
 
         # Embeds
         embed=discord.Embed(title=f'{self.client.user.name} Commands', description=f"Utilize the dropdown menu to select help pages.{ttr}", color= ctx.author.color)
-        embed.add_field(name="💁 **Help Modules:**", value="Page 1 | SysBot Commands\nPage 2 | Pokemon Files Commands\nPage 3 | Miscellaneous Commands\nPage 4 | Management Commands\nPage 5 | Moderation Commands\nPage 6 | Switch Commands\nPage 7 | Owner Commands\nPage 8 | Bot Management Commands", inline=True)
-        embed.add_field(name="ℹ️ **Bot Info:**", value=f"Servers: {len(self.client.guilds)}\nUsers: {len(self.client.users)}\nCommands: {len(self.client.commands)}\nCPU: {psutil.cpu_percent()}%\nMemory: {psutil.virtual_memory().percent}%", inline=True)
-        sysbot=discord.Embed(title=f'SysBot Module', description=ttr, color=ctx.author.color)
-        sysbot.add_field(name="SysBot Commands", value=sysbotval, inline=True)
-        files=discord.Embed(title=f'Files Module', description=ttr, color=ctx.author.color)
-        files.add_field(name="Pkx and Ekx Search Commands", value=filesval, inline=True)
-        general=discord.Embed(title=f'Miscellaneous Module', description=ttr, color=ctx.author.color)
-        general.add_field(name="General Commands", value=miscellaneousval, inline=True)
-        amanagement=discord.Embed(title=f'Channel Management Module', description=ttr, color=ctx.author.color)
-        amanagement.add_field(name="Channel Commands", value=chanval, inline=True)
-        moderation=discord.Embed(title=f'Moderation Module', description=ttr, color=ctx.author.color)
-        moderation.add_field(name="Server Moderation Commands", value=modval, inline=True)
-        sremote=discord.Embed(title=f'Switch Module', description=ttr, color=ctx.author.color)
-        sremote.add_field(name="Switch Remote Control Commands", value=remoteval, inline=True)
-        owner=discord.Embed(title=f'Owner Module', description=ttr, color=ctx.author.color)
-        owner.add_field(name="Owner Only Commands", value=ownerval, inline=True)
-        omanagement=discord.Embed(title=f'Bot Management Module', description=ttr, color=ctx.author.color)
-        omanagement.add_field(name="Bot Management Commands", value=botmanval, inline=True)
+        embed.add_field(name = "💁 **Help Modules:**", value = "Page 1 | SysBot Commands\nPage 2 | Pokemon Files Commands\nPage 3 | Miscellaneous Commands\nPage 4 | Management Commands\nPage 5 | Moderation Commands\nPage 6 | Switch Commands\nPage 7 | Owner Commands\nPage 8 | Bot Management Commands", inline = True)
+        embed.add_field(name = "ℹ️ **Bot Info:**", value = f"Servers: {len(self.client.guilds)}\nUsers: {len(self.client.users)}\nCommands: {len(self.client.commands)}\nCPU: {psutil.cpu_percent()}%\nMemory: {psutil.virtual_memory().percent}%", inline = True)
+        
+        sysbot = discord.Embed(title = 'SysBot Module', description = ttr, color = ctx.author.color)
+        sysbot.add_field(name = "SysBot Commands", value = sysbotval, inline = True)
+        
+        files = discord.Embed(title = 'Files Module', description = ttr, color = ctx.author.color)
+        files.add_field(name = "Pkx and Ekx Search Commands", value = filesval, inline = True)
+        
+        general = discord.Embed(title = 'Miscellaneous Module', description = ttr, color = ctx.author.color)
+        general.add_field(name = "General Commands", value = miscellaneousval, inline = True)
+        
+        amanagement = discord.Embed(title = 'Channel Management Module', description = ttr, color = ctx.author.color)
+        amanagement.add_field(name = "Channel Commands", value = chanval, inline = True)
+        
+        moderation = discord.Embed(title = 'Moderation Module', description = ttr, color = ctx.author.color)
+        moderation.add_field(name = "Server Moderation Commands", value = modval, inline = True)
+        
+        sremote = discord.Embed(title = 'Switch Module', description = ttr, color = ctx.author.color)
+        sremote.add_field(name = "Switch Remote Control Commands", value = remoteval, inline = True)
+        
+        owner = discord.Embed(title = 'Owner Module', description = ttr, color = ctx.author.color)
+        owner.add_field(name = "Owner Only Commands", value = ownerval, inline = True)
+        
+        omanagement = discord.Embed(title = 'Bot Management Module', description = ttr, color = ctx.author.color)
+        omanagement.add_field(name = "Bot Management Commands", value = botmanval, inline = True)
 
-        components=[
+        components = [
             [
                 Select(
-                    placeholder="Select a help menu",
-                    options=[
-                        SelectOption(label="Page 1 | SysBot Module", value="sysbot"),
-                        SelectOption(label="Page 2 | Files Module", value="files"),
-                        SelectOption(label="Page 3 | Miscellaneous Module", value="general"),
-                        SelectOption(label="Page 4 | Channel Management Module", value="amanagement"),
-                        SelectOption(label="Page 5 | Moderation Module", value="moderation"),
-                        SelectOption(label="Page 6 | Switch Remote Module", value="sremote"),
-                        SelectOption(label="Page 7 | Owner Module", value="owner"),
-                        SelectOption(label="Page 8 | Bot Management Module", value="omanagement")
+                    placeholder = "Select a help menu",
+                    options = [
+                        SelectOption(label = "Page 1 | SysBot Module", value = "sysbot"),
+                        SelectOption(label = "Page 2 | Files Module", value = "files"),
+                        SelectOption(label = "Page 3 | Miscellaneous Module", value = "general"),
+                        SelectOption(label = "Page 4 | Channel Management Module", value = "amanagement"),
+                        SelectOption(label = "Page 5 | Moderation Module", value = "moderation"),
+                        SelectOption(label = "Page 6 | Switch Remote Module", value = "sremote"),
+                        SelectOption(label = "Page 7 | Owner Module", value = "owner"),
+                        SelectOption(label = "Page 8 | Bot Management Module", value = "omanagement")
                         ],
                     )
             ],
             [
-                Button(label='Support Server', style=ButtonStyle.URL, url=support2)
+                Button(label = 'Support Server', style = ButtonStyle.URL, url = support2)
             ]
         ]
 
-        message = await ctx.reply(embed=embed, components=components)
-            
+        message = await ctx.reply(embed = embed, components = components)
+
         while(True):
             try:
-                interaction = await self.client.wait_for("select_option", check=None, timeout=30)
+                interaction = await self.client.wait_for("select_option", check = None, timeout = 30)
                 if interaction.values[0] == "sysbot":
-                    await interaction.respond(type=7, ephemeral=False, embed=sysbot)
+                    await interaction.respond(type = 7, ephemeral = False, embed = sysbot)
                 if interaction.values[0] == "files":
-                    await interaction.respond(type=7, ephemeral=False, embed=files)
+                    await interaction.respond(type = 7, ephemeral = False, embed = files)
                 if interaction.values[0] == "general":
-                    await interaction.respond(type=7, ephemeral=False, embed=general)
+                    await interaction.respond(type = 7, ephemeral = False, embed = general)
                 if interaction.values[0] == "amanagement":
-                    await interaction.respond(type=7, ephemeral=False, embed=amanagement)
+                    await interaction.respond(type = 7, ephemeral = False, embed = amanagement)
                 if interaction.values[0] == "moderation":
-                    await interaction.respond(type=7, ephemeral=False, embed=moderation)
+                    await interaction.respond(type = 7, ephemeral = False, embed = moderation)
                 if interaction.values[0] == "sremote":
-                    await interaction.respond(type=7, ephemeral=False, embed=sremote)
+                    await interaction.respond(type = 7, ephemeral = False, embed = sremote)
                 if interaction.values[0] == "owner":
-                    await interaction.respond(type=7, ephemeral=False, embed=owner)
+                    await interaction.respond(type = 7, ephemeral = False, embed = owner)
                 if interaction.values[0] == "omanagement":
-                    await interaction.respond(type=7, ephemeral=False, embed=omanagement)
+                    await interaction.respond(type = 7, ephemeral = False, embed = omanagement)
             except asyncio.TimeoutError:
                 await message.disable_components()
                 return

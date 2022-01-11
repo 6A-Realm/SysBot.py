@@ -2,7 +2,8 @@ import discord
 from discord.ext import commands, tasks
 import random
 import asyncio
-from pokemon.connection import game
+
+game = ["Pokémon"]
 
 # Cog 
 class presence(commands.Cog):

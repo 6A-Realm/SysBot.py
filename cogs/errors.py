@@ -16,21 +16,21 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, discord.ext.commands.errors.BadArgument):
             await ctx.send("You were unclear with your arguments.")
         if isinstance(error, discord.ext.commands.errors.CommandOnCooldown):
-            await ctx.send(f"Looks like you have already casted a vote recently!")    
+            await ctx.send('Looks like you have already casted a vote recently!')
         if isinstance(error, commands.MissingPermissions):
             await ctx.send(f"You're missing the following permissions: \n**{', '.join(error.missing_permissions)}**")
         if isinstance(error, discord.ext.commands.errors.CheckFailure):
             await ctx.send("You do not have permission to use this command.")
         if isinstance(error, discord.ext.commands.errors.MemberNotFound):
-            await ctx.send("This member was not found.") 
+            await ctx.send("This member was not found.")
         if isinstance(error, discord.ext.commands.errors.GuildNotFound):
-            await ctx.send("This guild was not found.")      
+            await ctx.send("This guild was not found.")
         if isinstance(error, discord.ext.commands.errors.UserNotFound):
-            await ctx.send("This user was not found.")  
+            await ctx.send("This user was not found.")
         if isinstance(error, discord.ext.commands.errors.ChannelNotFound):
-            await ctx.send("This channel was not found.")  
+            await ctx.send("This channel was not found.")
         if isinstance(error, discord.ext.commands.errors.RoleNotFound):
-            await ctx.send("This role was not found.")   
+            await ctx.send("This role was not found.")
         if isinstance(error, commands.BotMissingPermissions):
             await ctx.send(f"I'm missing the following permissions: \n**{', '.join(error.missing_permissions)}**")
         if isinstance(error, commands.NotOwner):

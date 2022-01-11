@@ -137,20 +137,14 @@ class friend(commands.Cog):
             codes = json.load(f)
         if str(ctx.message.author.id) in codes:
             embed.add_field(name="Switch:", value={codes[str(ctx.message.author.id)]}, inline=False)
-        else: 
-            pass
         with open('res/friendcodes-ds.json', 'r') as f:
             codes = json.load(f)
         if str(ctx.message.author.id) in codes:
             embed.add_field(name="DS::", value={codes[str(ctx.message.author.id)]}, inline=False)
-        else: 
-            pass        
         with open('res/friendcodes-home.json', 'r') as f:
             codes = json.load(f)
         if str(ctx.message.author.id) in codes:
             embed.add_field(name="Home:", value={codes[str(ctx.message.author.id)]}, inline=False)
-        else: 
-            pass
 
 
 def setup(client):

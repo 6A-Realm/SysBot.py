@@ -29,25 +29,24 @@ class owner(commands.Cog):
     @commands.command(help="List all servers the bot is in, including name, guild ID, owner, and invite.", brief="list")
     @commands.is_owner()
     async def list(self, ctx):
-            servernames = []
-            enter = '\n'
-            counter = 0
-            for guild in self.client.guilds:
-                counter += 1
-                guild = self.client.get_guild(guild.id)
-                try:
-                    invitelink = ""
-                    i = 0
-                    while invitelink == "":
-                        channel = guild.text_channels[i]
-                        link = await channel.create_invite(max_age=0,max_uses=0)
-                        invitelink = str(link)
-                        i += 1
-                except: 
-                    invitelink = "Unable to create an invite."
-                servernames.append(f"{counter}) [{guild.name}]({invitelink}) ⋅ {guild.id} ⋅ {guild.owner}")
-            embed = discord.Embed(title=f"{self.client.user.name}'s Servers", description=f"{enter.join(ch for ch in servernames)}", colour=discord.Colour.dark_blue())
-            await ctx.send(embed = embed)
+        servernames = []
+        enter = '\n'
+        for counter, guild in enumerate(self.client.guilds, start=1):
+            guild = self.client.get_guild(guild.id)
+            try:
+                invitelink = ""
+                i = 0
+                while invitelink == "":
+                    channel = guild.text_channels[i]
+                    link = await channel.create_invite(max_age=0,max_uses=0)
+                    invitelink = str(link)
+                    i += 1
+            except: 
+                invitelink = "Unable to create an invite."
+            servernames.append(f"{counter}) [{guild.name}]({invitelink}) ⋅ {guild.id} ⋅ {guild.owner}")
+        embed = discord.Embed(title = f"{self.client.user.name}'s Servers", description=f'{enter.join(iter(servernames))}', colour=discord.Colour.dark_blue())
+
+        await ctx.send(embed = embed)
 
     @commands.command(help="Leaves server from directed guild.", brief="leave <serverid>")
     @commands.is_owner()

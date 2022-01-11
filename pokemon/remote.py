@@ -25,16 +25,15 @@ with open("advanced/sudo.yaml") as file:
 
 # Screen shot protocol
 async def protocol(ctx):
-    if screenshot == True:
-        await asyncio.sleep(1)
-        screen = pyautogui.screenshot()
-        screen.save(dir)
-        embed = discord.Embed(color=0xFFD700)
-        image = discord.File("res/screen.jpg", filename="screen.jpg")
-        embed.set_image(url="attachment://screen.jpg")
-        await ctx.send(file=image, embed=embed)
-    else:
+    if screenshot != True:
         return
+    await asyncio.sleep(1)
+    screen = pyautogui.screenshot()
+    screen.save(dir)
+    embed = discord.Embed(color=0xFFD700)
+    image = discord.File("res/screen.jpg", filename="screen.jpg")
+    embed.set_image(url="attachment://screen.jpg")
+    await ctx.send(file=image, embed=embed)
 
 # Cog 
 class remote(commands.Cog):
@@ -138,9 +137,9 @@ class remote(commands.Cog):
                 asyncio.sleep(0.5)
                 pokemonBytes = serv.recv(689)
                 pokemonBytes = pokemonBytes[0:-1]
-                fileOut = open("Files/sysbot/dump.eb8", "wb")
-                fileOut.write(binascii.unhexlify(pokemonBytes))
-                fileOut.close()
+                pokemonBytes = pokemonBytes[:-1]
+                with open("Files/sysbot/dump.eb8", "wb") as fileOut:
+                    fileOut.write(binascii.unhexlify(pokemonBytes))
                 await ctx.send("Pokemon dumped.")
             else:
                 ctx.send("Dumping not set up for this game yet.")
@@ -176,7 +175,7 @@ class remote(commands.Cog):
             embed=discord.Embed(description="Your switch screen was attempted to be captured.", color=0x17c70a)
             embed.set_footer(text="Note that this function does not work for LGPE.")
             await ctx.send(embed=embed)
-        elif check == "battery" or check == "percent":
+        elif check in ["battery", "percent"]:
             switch(serv, "charge")
             await asyncio.sleep(1)
             charge = serv.recv(689)
@@ -195,13 +194,13 @@ class remote(commands.Cog):
 
     @commands.command()
     @lock()
-    async def retach(self, ctx):
+    async def reattach(self, ctx):
         switch(serv, "controllerType 1")        
-        await ctx.send("Your controller was retached.")
+        await ctx.send("Your controller was reattached.")
 
     @commands.command()
     @lock()
-    async def newattach(self, ctx):
+    async def newcontroller(self, ctx):
         switch(serv, "detachController")
         await asyncio.sleep(0.5)
         switch(serv, "controllerType 1")        

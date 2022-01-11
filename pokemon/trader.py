@@ -1,6 +1,7 @@
 from pokemon.pokeinput import queuelist
 from pokemon.connection import switch, serv
 from pokemon.values import getready, failed, success, errormessage, lgpe, swsh, b1s1
+from pokemon.values import p, e, sw, sh, bd, sp
 import discord
 from discord.ext import commands, tasks
 from discord.utils import get
@@ -10,11 +11,10 @@ import binascii
 from rich.console import Console
 import random
 import string
-import datetime
 
 console = Console()
 
-# Cog 
+# Trade loop cog 
 class trader(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -29,17 +29,17 @@ class trader(commands.Cog):
             queued = get(self.client.get_all_members(), id=user)
 
             # Stay awake protocol
-            if queued == None:
+            if queued is None:
                 while (True):
                     switch(serv, "click B")
-                    await asyncio.sleep(60)
+                    await asyncio.sleep(15)
 
             if queued != None:
                 switch(serv, "getTitleID")
                 title = serv.recv(689)
                 title = title[0:-1]
                 title = str(title,'utf-8')
-                if title == "0100000011D90000" or "010018E011D92000":
+                if title in [bd, sp]:
                     await queued.send(getready)
 
                     # Injection
@@ -49,9 +49,11 @@ class trader(commands.Cog):
                         injection = injector.read(344)
                         injection = str(binascii.hexlify(injection), "utf-8")
 
-                        # This is the part I need that way I can read the file and inject it into box 1 slot 1
-                        switch(serv, f"pointerPoke 0x{injection} {b1s1}")
-
+                        # Inject into box 1 slot 1
+                        for i in range(2):
+                            switch(serv, f"pointerPoke 0x{injection} {b1s1}")
+                        await asyncio.sleep(0.5)
+                        
                         # Opening trade menu to internet
                         console.log(f"Opening the trade menu. Queuing: {user}.", style="green")
                         switch(serv, "click Y")
@@ -64,32 +66,33 @@ class trader(commands.Cog):
                             await asyncio.sleep(1)
                         switch(serv, "setStick RIGHT yVal -0x8000")
                         switch(serv, "setStick RIGHT yVal 0x0000")
-                        await asyncio.sleep(1)
+                        await asyncio.sleep(0.5)
                         switch(serv, "setStick RIGHT yVal -0x8000")
                         switch(serv, "setStick RIGHT yVal 0x0000")
-                        await asyncio.sleep(1)
-                        for x in range(5):
+                        await asyncio.sleep(0.5)
+                        for x in range(10):
                             switch(serv, "click A")
                             await asyncio.sleep(1)
+                        await asyncio.sleep(5)
 
-                        # Trade code generator || There is probably a more efficent way
+                        # Trade code generator
                         console.print("Generating 8 digit code.", style="red")
 
                         tradecode = []
                         for c in range(8): 
-                            code = random.randint(0,8) 
+                            code = random.randint(0,8)
                             tradecode.append(str(code))
-                            if (code == 1 or code == 4 or code == 7):
+                            if code in [1, 4, 7]:
                                 X = 500
-                            if (code == 2 or code == 5 or code == 8 or code == 0):
+                            if code in [2, 5, 8, 0]:
                                 X = 700
-                            if (code == 3 or code == 6 or code == 9):
+                            if code in [3, 6, 9]:
                                 X = 800
-                            if (code == 1 or code == 2 or code == 3):
+                            if code in [1, 2, 3]:
                                 Y = 450
-                            if (code == 4 or code == 5 or code == 6):
+                            if code in [4, 5, 6]:
                                 Y = 500
-                            if (code == 7 or code == 8 or code == 9):
+                            if code in [7, 8, 9]:
                                 Y = 550
                             if (code == 0):
                                 Y = 600
@@ -97,8 +100,8 @@ class trader(commands.Cog):
                             await asyncio.sleep(0.5)
 
                         tradecode.insert(4, '-')
-                        await queued.send(f'Your trade code is: `{"".join(ch for ch in tradecode)}`.')
-                        console.print(f'Searching on code: {"".join(ch for ch in tradecode)}.', style="bold underline purple")
+                        await queued.send(f'Your trade code is: `{"".join(tradecode)}`.')
+                        console.print(f'Searching on code: {"".join(tradecode)}.', style="bold underline purple")
                         await asyncio.sleep(0.2)
                         await queued.send("I am searching...")
                         await asyncio.sleep(0.5)
@@ -106,7 +109,9 @@ class trader(commands.Cog):
                         # Searching
                         switch(serv, "click PLUS")
                         await asyncio.sleep(1)
-                        switch(serv, "click A")
+                        for x in range(3):
+                            switch(serv, "click A")
+                            await asyncio.sleep(1)
                         await asyncio.sleep(30)
                         switch(serv, "click Y")
                         await asyncio.sleep(1)
@@ -169,21 +174,9 @@ class trader(commands.Cog):
                         await asyncio.sleep(2)
                         switch(serv, "click A")
                         console.print("Awaiting new users...", style="bold underline white")
-                        logger = open("logs.txt", "a")
-                        logtime = datetime.datetime.now()
-                        logger.write(logtime + " || " + {queued} + " has traded with the bot" + "\n")
-                        logger.close()
                     else:
                         del queuelist[0]
-                        queued.send(errormessage)
-
-                if title == "010003F003A34000" or "0100187003A36000":
-                    await queued.send(lgpe)
-                    del queuelist[0]
-
-                if title == "0100ABF008968000" or "01008DB008C2C000":
-                    await queued.send(swsh)
-                    del queuelist[0]
+                        await queued.send(errormessage)
 
 
 def setup(client):

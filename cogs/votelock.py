@@ -18,7 +18,7 @@ class votelock(commands.Cog):
         counter = votes.count(channel)
 
         if ctx.message.author.id in voted:
-            return await ctx.send("You've already voted to lock down a channel. {}/3 votes have been recorded.").format(votes.count(channel))
+            return await ctx.send(f"You've already voted to lock down a channel. {votes.count(channel)}/3 votes have been recorded.")
 
         voted.append(user)
         votes.append(channel)

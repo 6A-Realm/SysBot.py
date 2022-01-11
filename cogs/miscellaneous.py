@@ -56,7 +56,7 @@ class miscellaneous(commands.Cog):
         embed.set_thumbnail(url="https://i.ytimg.com/vi/1WbOHrQfMlc/mqdefault.jpg")
         await ctx.send(embed=embed)
 
-    @commands.command() 
+    @commands.command()
     @commands.guild_only()
     async def languide(self, ctx):
         embed=discord.Embed(title="How To Use LAN Sysbot", url="https://docs.google.com/document/d/e/2PACX-1vR9tpYmZ3qCbqOeZb1XwnNESAauTf9rVJVzJ1G22TkmGsVZf8LVJs-o-rNshKsYZuyZBdrdRDzTtsqH/pub", description=f"""
