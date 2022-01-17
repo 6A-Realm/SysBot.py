@@ -26,9 +26,11 @@ def get_prefix(client, message):
     return commands.when_mentioned_or(*prefix)(client, message)
 
 ##Simple bot settings like mentioning as a prefix, settings all intents to true, deleting built in discord.py help command
-client = commands.AutoShardedBot(description="SysBot 1.1.4", command_prefix=get_prefix, intents=discord.Intents.all(), help_command = None, pm_help = False)
+client = commands.AutoShardedBot(description="SysBot 2.0.0", command_prefix=get_prefix, intents=discord.Intents.all(), help_command = None, pm_help = False)
 slash = SlashCommand(client, sync_commands=True)
-pokemon = ["connection", "pokeinput", "queue", "remote", "trader", "advanced"]       
+pokemon = ["connection"] 
+pdiscord = ["advanced", "pokeinput", "queue", "remote", "trader"]
+
 console = Console()
 
 # State if autolauncher is toggled
@@ -54,11 +56,15 @@ async def on_ready():
     ''')
 
     if autolauncher == 1:
-        for extension in pokemon:
+        try:
+            client.load_extension("pokemon.connection.wireless")
+        except Exception as e:
+            console.print(f"Unable to load {e}.", style="red")
+        for extension in pdiscord:
             try:
-                client.load_extension("pokemon." + extension)
+                client.load_extension("pokemon.discord." + extension)
             except Exception as e:
-                console.print(f"Unable to load {extension}.", style="red")
+                console.print(f"Unable to load {extension} {e}.", style="red")
 
     elif autolauncher ==2:
         console.print('The bot will launch without sysbot commands.', style="blue")
@@ -68,11 +74,15 @@ async def on_ready():
         yes = {'yes', 'y'}
         choice = input().lower()
         if choice in yes:
-            for extension in pokemon:
+            try:
+                client.load_extension("pokemon.connection.wireless")
+            except Exception as e:
+                console.print(f"Unable to load {e}.", style="red")
+            for extension in pdiscord:
                 try:
-                    client.load_extension("pokemon." + extension) 
+                    client.load_extension("pokemon.discord." + extension)
                 except Exception as e:
-                    console.print(f"Unable to load {extension}.", style="red")
+                    console.print(f"Unable to load {extension} {e}.", style="red")
         else:
             print('The bot will launch without sysbot commands.')
 
@@ -89,7 +99,10 @@ if __name__ == '__main__':
         try:
             client.load_extension(x)
         except Exception as e:
-            console.print(f"Unable to load {x}.", style="red")
+            console.print(f"Unable to load {x}: {e}.", style="red")
+
+#Debugger || {botprefix}jsk debug <command>
+client.load_extension('jishaku')
 
 try:
     client.run('{}'.format(token))

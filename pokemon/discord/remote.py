@@ -1,5 +1,5 @@
-from pokemon.connection import switch, serv
-from pokemon.values import bd, sp
+from pokemon.connection.wireless import switch, serv
+from pokemon.utils.values import bd, sp
 from yaml import load
 import discord
 from discord.ext import commands
@@ -7,9 +7,6 @@ import asyncio
 import pyautogui
 import typing
 import binascii
-import PIL.Image as IMaker
-import io
-import base64
 
 # Loads switch ip and port from config file
 with open("config.yaml") as file:
@@ -207,25 +204,6 @@ class remote(commands.Cog):
         await ctx.send("Your controller was reset.")
 
 # {-- Other --}
-## IMaker
-    @commands.command()
-    @lock()
-    async def pixelPeek(self, ctx):
-        switch(serv, "pixelPeek")
-        await asyncio.sleep(1)
-        peek = serv.recv(1024)
-        peek = peek[0:-1]
-        print(peek)
-        await ctx.send(peek)
-        decode = base64.b64decode(peek)
-        print(decode)
-        image = IMaker.open(io.BytesIO(decode))
-        print(image)
-        image = image.save("res/screen.jpg")
-        embed = discord.Embed(color=0xFFD700)
-        embed.set_image(url="attachment://screen.jpg")
-        await ctx.send(file = image, embed = embed)
-
     @commands.command()
     @lock()
     async def titleid(self, ctx): 
@@ -239,8 +217,8 @@ class remote(commands.Cog):
     @commands.command()
     @lock()
     async def reconnect(self, ctx):
-        self.client.unload_extension("pokemon.connection")
-        self.client.load_extension("pokemon.connection")
+        self.client.unload_extension("pokemon.connection.wireless")
+        self.client.load_extension("pokemon.connection.wireless")
         await ctx.reply("Attempted to reconnect.")
 
 

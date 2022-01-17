@@ -7,6 +7,7 @@ bd = "0100000011D90000"
 sp = "010018E011D92000"
 
 # Bot Speech
+hello = "Hello there! I am a sysbot created by 6A"
 getready = "Hello! Please prepare yourself, your trade is about to begin."
 failed = "Failed to connect and trade with user."
 success = "Here is what you traded to me:"

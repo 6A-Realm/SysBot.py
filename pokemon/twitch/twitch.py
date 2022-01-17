@@ -13,14 +13,10 @@ with open("config.yaml") as file:
     channel = data["channel"]
     support2 = data["support-server-invite"]
 
-client = commands.Bot(
-    irc_token=tmitoken,
-    client_id=clientid,
-    nick=botnickname,
-    prefix=botprefix,
-    initial_channels=[channel]
-)
+# Defining client
+client = commands.Bot(irc_token=tmitoken, client_id=clientid, nick=botnickname, prefix=botprefix, initial_channels=[channel])
 
+# Echo notification on start up
 @client.event
 async def event_ready():
     print(f"{botnickname} is connected to twitch.")

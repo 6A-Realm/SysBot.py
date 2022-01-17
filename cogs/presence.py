@@ -3,6 +3,10 @@ from discord.ext import commands, tasks
 import random
 import asyncio
 
+# Queue Length
+queuelength = []
+
+# Game Title
 game = ["Pokémon"]
 
 # Cog 
@@ -16,29 +20,26 @@ class presence(commands.Cog):
     async def presence(self):
         await self.client.wait_until_ready()
 
-        # Presence  
-        eb8s = random.randint(5,45) 
-        await self.client.change_presence(activity=discord.Activity(type = discord.ActivityType.watching, name = ".eb8s only."))
-        await asyncio.sleep(eb8s)
-
-        help = random.randint(5,45) 
-        await self.client.change_presence(activity = discord.Game(name = f'@{self.client.user.name} help'))
-        await asyncio.sleep(help)
-
-        pokemon = random.randint(5,45) 
-        await self.client.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = "you get your pokemon"))
-        await asyncio.sleep(pokemon)
+        # Presence
+        length = len(queuelength)
+        queue = random.randint(5,45) 
+        if length > 0:
+            await self.client.change_presence(activity=discord.Game(name=f"Trading with {length} members"))
+            await asyncio.sleep(queue)
+        else:
+            await self.client.change_presence(activity=discord.Game(status=discord.Status.idle, name=f"SysBot queue is empty"))
+            await asyncio.sleep(queue)
 
         playing = random.randint(5,45) 
-        await self.client.change_presence(activity = discord.Game(name = game))
+        await self.client.change_presence(activity = discord.Game(name = ''.join(game)))
         await asyncio.sleep(playing)
 
-        invite = random.randint(5,45) 
-        await self.client.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = ".gg/pkmn"))
-        await asyncio.sleep(invite)
+        help = random.randint(5,45) 
+        await self.client.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = f"@{self.client.user.name} help"))
+        await asyncio.sleep(help)
 
         py = random.randint(5,45) 
-        await self.client.change_presence(activity = discord.Game(name = 'SysBot.py'))
+        await self.client.change_presence(activity = discord.Game(name = "SysBot.py by 6A"))
         await asyncio.sleep(py)
 
 

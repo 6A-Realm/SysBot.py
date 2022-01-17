@@ -1,7 +1,6 @@
-from pokemon.pokeinput import queuelist
-from pokemon.connection import switch, serv
-from pokemon.values import getready, failed, success, errormessage, lgpe, swsh, b1s1
-from pokemon.values import p, e, sw, sh, bd, sp
+from pokemon.discord.pokeinput import queuelist
+from pokemon.connection.wireless import switch, serv
+from pokemon.utils.values import getready, failed, success, errormessage, b1s1, p, e, sw, sh, bd, sp
 import discord
 from discord.ext import commands, tasks
 from discord.utils import get

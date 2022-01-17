@@ -1,8 +1,7 @@
 import discord
-from discord import client
 from discord.ext import commands
 import yaml
-from yaml import load, dump
+from yaml import load
 
 # Simple file reader to load advanced settings
 with open("advanced/blacklist.yaml", encoding='utf-8') as file:
@@ -12,10 +11,6 @@ with open("advanced/blacklist.yaml", encoding='utf-8') as file:
 with open("advanced/logs.yaml", encoding='utf-8') as file:
     data = load(file)
     log = data["log"]
-
-with open("advanced/priority.yaml", encoding='utf-8') as file:
-    data = load(file)
-    priority = data["priority"]
 
 with open("advanced/sudo.yaml", encoding='utf-8') as file:
     data = load(file)

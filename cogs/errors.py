@@ -16,7 +16,7 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, discord.ext.commands.errors.BadArgument):
             await ctx.send("You were unclear with your arguments.")
         if isinstance(error, discord.ext.commands.errors.CommandOnCooldown):
-            await ctx.send('Looks like you have already casted a vote recently!')
+            await ctx.send(f"You are on command cooldown. Try again in `{round(error.retry_after, 2)} seconds`.")
         if isinstance(error, commands.MissingPermissions):
             await ctx.send(f"You're missing the following permissions: \n**{', '.join(error.missing_permissions)}**")
         if isinstance(error, discord.ext.commands.errors.CheckFailure):

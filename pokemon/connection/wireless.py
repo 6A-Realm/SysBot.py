@@ -2,7 +2,7 @@ from discord.ext import commands
 from yaml import load
 import socket
 from rich.console import Console
-from pokemon.values import p, e, sw, sh, bd, sp
+from pokemon.utils.values import p, e, sw, sh, bd, sp
 from cogs.presence import game
 console = Console()
 

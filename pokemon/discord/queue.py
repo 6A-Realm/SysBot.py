@@ -1,13 +1,16 @@
-from pokemon.pokeinput import queuelist
+from pokemon.utils.uqueue import queuelist
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
+from discord.utils import get
 
 # Cog 
 class queued(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-# {-- Queue Module --}   
+# {-- Queue Module --}
+
+    # Position commands
     @commands.group(invoke_without_command=True)
     async def queue(self, ctx):
         if ctx.message.author.id in queuelist:
@@ -19,6 +22,9 @@ class queued(commands.Cog):
 
     @queue.group()
     async def list(self, ctx):
+        length = {len(queuelist)}
+        if length == 0:
+            return await ctx.send("Queue is empty. Awaiting trades.")
         list = []
         enter = '\n'
         counter = 0
@@ -29,6 +35,17 @@ class queued(commands.Cog):
         embed = discord.Embed(title="Queue List", description=f"{enter.join(y for y in list)}", colour=discord.Colour.blurple())
         await ctx.send(embed = embed)
 
+    @queue.group()
+    @commands.is_owner()
+    async def status(self, ctx):
+        length = {len(queuelist)}
+        if length == 0:
+            return await ctx.send("Queue is empty. Awaiting trades.")
+        processing = queuelist[0]
+        user = get(self.client.get_all_members(), id=processing)
+        await ctx.send(f"{user.name} is currently being processed.")
+
+    # Remove from queue
     @queue.group()
     async def leave(self, ctx):
         if ctx.message.author.id in queuelist:
@@ -56,6 +73,28 @@ class queued(commands.Cog):
             await ctx.send(f"{name} was removed from the queue.")
         else:
             await ctx.send(f"{name} is not in queue.")
+
+    @queue.group()
+    @commands.is_owner()
+    async def clear(self, ctx):
+        queuelist.clear()
+        await ctx.send("Queue has been cleared.") 
+
+    # Open and close
+    @queue.group()
+    @commands.is_owner()
+    async def close(self, ctx):
+        ctx.client.unload_extension("pokemon.discord.pokeinput")
+        await ctx.reply("Queues are now closed.")
+
+    @queue.group()
+    @commands.is_owner()
+    async def open(self, ctx):
+        try:
+            ctx.client.load_extension("pokemon.discord.pokeinput")
+            await ctx.reply("Queues are now open.")
+        except commands.ExtensionAlreadyLoaded:
+            await ctx.send("Queues are already open.")
 
 
 def setup(client):

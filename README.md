@@ -4,9 +4,8 @@
 ## Should I use this bot?
 If you want to use this for SysBot:
 
-	Personally, no. It barely works, I did it for fun.
-	- There is no legality checks and there is no pkx or pbx conversion. 
-	- I did not implement anything with offsets other than b1s1.
+	Personally, I would not use this as a SysBot.NET replacement just yet.
+	- I did not implement anything with offsets other than injection; therefore, the client does not really know which screen the switch it exactly on. It assumes you are on certain screens.
     
 If you want to use this for other features:
 
@@ -16,8 +15,11 @@ If you want to use this for other features:
     - Easier remote control handling and debugging. 
 
 ## Something doesn't work correctly:
-Not everything is tested and I doubt everything will work as expected.
-- If you want to open an issue then I might take a look at it. If you want to fork and fix then I could always pull as well.
+Open an issue with the following information: 
+- Command
+- Expectations
+- Output/Results
+- List errors using the command `jsk debug <command>`
 
 ## Support:
 Read the [Wiki](https://github.com/6A-Realm/SysBot.py/wiki) before asking questions. If you still cannot figure it out, ask nicely and I might have an answer.
@@ -25,16 +27,15 @@ Read the [Wiki](https://github.com/6A-Realm/SysBot.py/wiki) before asking questi
 
 [<img src="https://canary.discordapp.com/api/guilds/771539948687589386/widget.png?style=banner2">](https://discord.gg/TwyCFr5WDY)
 
-## Future goals:
-Feel free to fork and do the stuff I couldn't.
-
 ### Touchscreen input:
 - [x] More accurate trade code input
-### CoreApi
-- [ ] Encryption and Decryption
-- [ ] Legality Checks
+### Api
+- [X] Legality Checks
+- [x] Showdown to binary 
+### Pkx -> Ekx
+- [X] Encryption and Decryption
 ### Screen capture
-- [ ] Fix pixelPeek
+- [ ] Screen capture Nintendo Switch
 ### Offset Checks
 - [ ] Make it more stable
 
@@ -43,6 +44,7 @@ Feel free to fork and do the stuff I couldn't.
 
 ## Credits:
 - [olliz0r's sys-botbase](https://github.com/olliz0r/sys-botbase): Switch automation and pokemon injection.
+- [Z1R343L](https://github.com/olliz0r/sys-botbase): Added api handling and pkx to ekx conversion. 
 
 ## License:
 [AGPLv3+](https://www.gnu.org/licenses/agpl-3.0.en.html)
