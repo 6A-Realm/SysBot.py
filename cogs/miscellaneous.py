@@ -1,12 +1,13 @@
 import discord
 from discord.ext import commands
-from yaml import load, dump
+from yaml import load
+import json
 import asyncio
 
 # Loads token and prefix from config file
 with open("config.yaml") as file:
     data = load(file)
-    botprefix = data["botprefix"]
+    botprefix = data["defaultprefix"]
     support = data["support-server-name"]
     support2 = data["support-server-invite"]
     donation = data["donation"]
@@ -18,7 +19,10 @@ class miscellaneous(commands.Cog):
     @commands.command()
     @commands.guild_only()
     async def prefix(self, ctx):
-        await ctx.send(f'My prefix is: `{botprefix}`')
+        with open("res/prefix.json", "r") as f:
+            prefixes = json.load(f)
+        prefix = prefixes[str(ctx.message.guild.id)]
+        await ctx.send(f'My prefix in this server is: `{prefix}`')
 
     @commands.command()
     @commands.guild_only()

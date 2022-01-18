@@ -10,7 +10,6 @@ import io
 from aiohttp_requests import requests
 from json import loads
 import aiofiles
-import binascii
 from rich.console import Console
 
 console = Console()

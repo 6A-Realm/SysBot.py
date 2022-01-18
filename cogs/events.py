@@ -1,13 +1,19 @@
 import discord
 from discord.ext import commands
 from yaml import load
+import io
+from aiohttp_requests import requests
+from json import loads
 import json
 from discord_components import Button, ButtonStyle
+
+# API link
+pinfo = "https://coreapi-production.up.railway.app/api/PokemonInfo"
 
 # Loads values from config.yaml
 with open("config.yaml") as file:
     data = load(file)
-    botprefix = data["botprefix"]
+    botprefix = data["defaultprefix"]
     embedcolor = data["color"]
     support = data["support-server-name"]
     support2 = data["support-server-invite"]
@@ -20,11 +26,14 @@ class Events(commands.Cog):
     # Forwards dms to specified channel dmchannel in config.yaml
     @commands.Cog.listener()
     async def on_message(self, message):
+
+        #Ignore all bots
+        if message.author.bot:
+            return
+            
         if isinstance(message.channel, discord.DMChannel):
 
             # Ignore arg
-            if message.author.bot:
-                return
             if message.content.startswith('+'):
                 return
             if message.attachments:                
@@ -35,9 +44,38 @@ class Events(commands.Cog):
             embed.set_footer(text = f"Reply using {botprefix}directmessage {message.author.id}")
             await channel.send(embed=embed)    
             await self.client.process_commands(message)
+            
+        else:
+            for attachment in message.attachments:                
+                if attachment.filename.endswith((".eb8", ".pb8", ".pk6", ".pk7", ".ek8", ".pk8")) and message.content == "":
+
+                    # Convert to bytes and save
+                    buffer = io.BytesIO()
+                    await attachment.save(buffer)
+                    data = buffer.getvalue()
+
+                    # Send to coreapi instance 
+                    response = loads((await (await requests.post(pinfo, data={"pokemon": data})).content.read()).decode("utf-8"))
+                    species = response["species"]
+                    gender = response["gender"]
+                    item = response["held_item"]
+                    ability = response["ability"]
+                    level = response["level"]
+                    shiny = response["is_shiny"]
+
+                    nature = response["nature"]
+
+                    m1 = response["move1"]
+                    m2 = response["move2"]
+                    m3 = response["move3"]
+                    m4 = response["move4"]
+
+                    information = f"```{species} ({gender}) @ {item}\nAbility: {ability}\nLevel: {level}\nShiny: {shiny}\n{nature} Nature\n-{m1}\n-{m2}\n-{m3}\n-{m4}```"
+                    await message.channel.send(information)
+                    await self.client.process_commands(message)
 
     @commands.Cog.listener()
-    async def on_guild_join(guild):
+    async def on_guild_join(self, guild):
         # Add prefix
         with open("res/prefix.json", "r") as f:
             prefixes = json.load(f)
@@ -63,7 +101,7 @@ class Events(commands.Cog):
             pass
 
     @commands.Cog.listener()
-    async def on_guild_remove(guild):
+    async def on_guild_remove(self, guild):
         with open("res/prefix.json", "r") as f:
             prefixes = json.load(f)
         prefixes.pop(str(guild.id))

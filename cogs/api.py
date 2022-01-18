@@ -2,44 +2,72 @@ import discord
 from discord.ext import commands
 import io
 from aiohttp_requests import requests
+from pokemon.utils.pokecrypto import *
 from json import loads
 import base64
+import aiofiles
+import os
 
-# API link
+# API links
 pinfo = "https://coreapi-production.up.railway.app/api/PokemonInfo"
+bdspshowdown = "https://7d256e9c7525.up.railway.app/pokemon/BDSP/showdown"
+
+# Legality check 
+async def check(ctx, response):
+    # Send to coreapi instance 
+    if response["is_legal"] is True:
+        await ctx.send("The pokémon provided is legal and can be traded.")
+
+    else: 
+        reasonslist = []
+        counter = 0
+        enter = "\n"
+        reasons = response["illegal_reasons"].split("\n")
+        for r in reasons: 
+            counter += 1
+            reasonslist.append(f"{counter}. {r}")
+        embed = discord.Embed(title="Your Pokémon is illegal:", description=f"{enter.join(re for re in reasonslist)}", color = discord.Colour.red())
+        await ctx.reply(embed = embed)
 
 # Cog 
-class coreapi(commands.Cog):
+class api(commands.Cog):
     def __init__(self, client):
         self.client = client
 
 # {-- Public Commands --}
     @commands.command()
     @commands.guild_only()
-    async def legal(self, ctx):
-        for attachment in ctx.message.attachments:                
-            if attachment.filename.endswith((".eb8", ".pb8", ".pk6", ".pk7", ".ek8", ".pk8")):
+    async def legal(self, ctx, set: str = None):
+
+        if not set and len(ctx.message.attachments) != 0:
+            for attachment in ctx.message.attachments:                
+                if attachment.filename.endswith((".eb8", ".pb8", ".pk6", ".pk7", ".ek8", ".pk8")):
+
+                        # Convert to bytes and save
+                        buffer = io.BytesIO()
+                        await attachment.save(buffer)
+                        data = buffer.getvalue()
+
+                        # Send to coreapi instance 
+                        response = loads((await (await requests.post(pinfo, data={"pokemon": data})).content.read()).decode("utf-8"))
+                        await check(ctx, response)
+        
+                elif (not ctx.message.attachments) and (set is not None): 
+
+                    # Convert showdown to file
+                    showdown = await requests.post(bdspshowdown, json={"showdownSet": set})
+                    bytes = io.BytesIO()
+                    bytes.write(await showdown.content.read())
+                    data = bytearray(bytes.getvalue())
 
                     # Convert to bytes and save
-                    buffer = io.BytesIO()
-                    await attachment.save(buffer)
-                    data = buffer.getvalue()
+                    pc = Pokecypto(data = data)
+                    encrypt = pc.encrypt()
+                    attachment = io.BytesIO(encrypt).read()
 
-                    # Send to coreapi instance 
                     response = loads((await (await requests.post(pinfo, data={"pokemon": data})).content.read()).decode("utf-8"))
-                    if response["is_legal"] is True:
-                        await ctx.send("Your Pokémon is legal.")
+                    await check(ctx, response)
 
-                    else: 
-                        reasonslist = []
-                        counter = 0
-                        enter = "\n"
-                        reasons = response["illegal_reasons"].split("\n")
-                        for r in reasons: 
-                            counter += 1
-                            reasonslist.append(f"{counter}. {r}")
-                        embed = discord.Embed(title="Your Pokémon is illegal:", description=f"{enter.join(re for re in reasonslist)}", color = discord.Colour.red())
-                        await ctx.reply(embed = embed)
             else:
                 return await ctx.channel.send("Ensure your file is valid, created from PKHeX.")
 
@@ -64,13 +92,6 @@ class coreapi(commands.Cog):
                     level = response["level"]
                     shiny = response["is_shiny"]
 
-                    hp = response["hp_iv"]
-                    atk = response["atk_iv"]
-                    defense = response["def_iv"]
-                    spa = response["spa_iv"]
-                    spd = response["spd_iv"]
-                    spe = response["spe_iv"]
-
                     nature = response["nature"]
 
                     m1 = response["move1"]
@@ -78,38 +99,9 @@ class coreapi(commands.Cog):
                     m3 = response["move3"]
                     m4 = response["move4"]
 
-                    information = f"{species} ({gender}) @ {item}\nAbility: {ability}\nLevel: {level}\nShiny: {shiny}\nIV: {hp} {atk} {defense} {spa} {spd} {spe}\n{nature} Nature\n-{m1}\n-{m2}\n-{m3}\n-{m4}"
+                    information = f"{species} ({gender}) @ {item}\nAbility: {ability}\nLevel: {level}\nShiny: {shiny}\n{nature} Nature\n-{m1}\n-{m2}\n-{m3}\n-{m4}"
                     await ctx.send(information)
 
-            else:
-                return await ctx.channel.send("Ensure your file is valid, created from PKHeX.")
-
-    @commands.command()
-    @commands.guild_only()
-    async def legal(self, ctx):
-        for attachment in ctx.message.attachments:                
-            if attachment.filename.endswith((".eb8", ".pb8", ".pk6", ".pk7", ".ek8", ".pk8")):
-
-                    # Convert to bytes and save
-                    buffer = io.BytesIO()
-                    await attachment.save(buffer)
-                    data = buffer.getvalue()
-
-                    # Send to coreapi instance 
-                    response = loads((await (await requests.post(pinfo, data={"pokemon": data})).content.read()).decode("utf-8"))
-                    if response["is_legal"] is True:
-                        await ctx.send("Your Pokémon is legal.")
-
-                    else: 
-                        reasonslist = []
-                        counter = 0
-                        enter = "\n"
-                        reasons = response["illegal_reasons"].split("\n")
-                        for r in reasons: 
-                            counter += 1
-                            reasonslist.append(f"{counter}. {r}")
-                        embed = discord.Embed(title="Your Pokémon is illegal:", description=f"{enter.join(re for re in reasonslist)}", color = discord.Colour.red())
-                        await ctx.reply(embed = embed)
             else:
                 return await ctx.channel.send("Ensure your file is valid, created from PKHeX.")
                 
@@ -156,5 +148,37 @@ class coreapi(commands.Cog):
             else:
                 return await ctx.channel.send("Ensure your file is valid, created from PKHeX.")
 
+    @commands.command()
+    @commands.guild_only()
+    async def convert(self, ctx, set: str = None):
+
+        if set is not None:
+
+                # Convert showdown to file
+                showdown = await requests.post(bdspshowdown, json={"showdownSet": set})
+                bytes = io.BytesIO()
+                bytes.write(await showdown.content.read())
+                data = bytearray(bytes.getvalue())
+
+                # Convert to bytes and save
+                pc = Pokecypto(data = data)
+                encrypt = pc.encrypt()
+                attachment = io.BytesIO(encrypt).read()
+
+                response = loads((await (await requests.post(pinfo, data={"pokemon": data})).content.read()).decode("utf-8"))
+                
+                if response["is_legal"] is True:
+                    species = response["species"]
+                    async with aiofiles.open(f"Files/sysbot/{species}.eb8", 'wb+') as f:
+                        await f.write(attachment)
+                    await ctx.send(file=discord.File(f"Files/sysbot/{species}.eb8"))
+                
+                else:
+                    await ctx.send("Unable to generate a legal file from the provided showdown set.")
+        
+        else:
+            await ctx.send("Provide a showdown set to convert.")
+
+
 def setup(client):
-    client.add_cog(coreapi(client))
+    client.add_cog(api(client))

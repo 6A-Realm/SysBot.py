@@ -5,12 +5,12 @@ from discord_slash import cog_ext, SlashContext
 from discord_components import DiscordComponents, SelectOption, Select, Button, ButtonStyle
 import asyncio
 import os
-
+import json
 
 ##Loads token and prefix from config file
 with open("config.yaml") as file:
         data = load(file)
-        botprefix = data["botprefix"]
+        botprefix = data["defaultprefix"]
         support2 = data["support-server-invite"]
 
 class slash(commands.Cog):
@@ -203,7 +203,10 @@ class slash(commands.Cog):
 
     @cog_ext.cog_slash(name="prefix", description="Gives you the bot's prefix")
     async def _prefix(self, ctx):
-        await ctx.send(f'My prefix is `{botprefix}`.')
+        with open("res/prefix.json", "r") as f:
+            prefixes = json.load(f)
+        prefix = prefixes[str(ctx.guild.id)]
+        await ctx.send(f'My prefix in this server is: `{prefix}`')
 
 def setup(client):
     client.add_cog(slash(client))

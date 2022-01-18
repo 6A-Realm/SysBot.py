@@ -5,7 +5,9 @@
 If you want to use this for SysBot:
 
 	Personally, I would not use this as a SysBot.NET replacement just yet.
-	- I did not implement anything with offsets other than injection; therefore, the client does not really know which screen the switch it exactly on. It assumes you are on certain screens.
+	- I did not implement anything with offsets other than injection; therefore, 
+	the client does not really know which screen the switch it exactly on. 
+	It assumes you are on certain screens.
     
 If you want to use this for other features:
 

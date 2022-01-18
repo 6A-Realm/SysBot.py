@@ -2,7 +2,7 @@
 
 # General configuration settings
 token: Token.goes.here
-botprefix: + 
+defaultprefix: + 
 color: 0xFFA500 #Include 0x
 support-server-name: Pokemon EX Realm
 support-server-invite: https://discord.gg/BcDexg4jDu

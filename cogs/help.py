@@ -7,7 +7,7 @@ import asyncio
 
 with open("config.yaml") as file:
     data = load(file)
-    botprefix = data["botprefix"]
+    botprefix = data["defaultprefix"]
     support2 = data["support-server-invite"]
 
 ttr = str(f"""
