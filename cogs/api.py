@@ -6,7 +6,6 @@ from pokemon.utils.pokecrypto import *
 from json import loads
 import base64
 import aiofiles
-import os
 
 # API links
 pinfo = "https://coreapi-production.up.railway.app/api/PokemonInfo"

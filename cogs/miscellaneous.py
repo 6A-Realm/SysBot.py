@@ -7,7 +7,6 @@ import asyncio
 # Loads token and prefix from config file
 with open("config.yaml") as file:
     data = load(file)
-    botprefix = data["defaultprefix"]
     support = data["support-server-name"]
     support2 = data["support-server-invite"]
     donation = data["donation"]

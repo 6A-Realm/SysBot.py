@@ -1,20 +1,14 @@
 import discord
 from discord.ext import commands
 from yaml import load
+import json
 import psutil
 from discord_components import DiscordComponents, SelectOption, Select, Button, ButtonStyle
 import asyncio
 
 with open("config.yaml") as file:
     data = load(file)
-    botprefix = data["defaultprefix"]
     support2 = data["support-server-invite"]
-
-ttr = str(f"""
-```yaml
-Prefix: {botprefix} - Required Parameter: <> - Optional Parameter: ()
-```
-""")
 
 sysbotval = str(f"""
  ⋅ testtradetest `<eb8>`: Request a pokemon from the bot.
@@ -122,7 +116,15 @@ class help(commands.Cog):
 
     @commands.command()
     async def help(self, ctx):
+        with open("res/prefix.json", "r") as f:
+            prefixes = json.load(f)
+        prefix = prefixes[str(ctx.message.guild.id)]
 
+        ttr = str(f"""
+```yaml
+Prefix: {prefix} - Required Parameter: <> - Optional Parameter: ()
+```
+        """)
         # Embeds
         embed=discord.Embed(title=f'{self.client.user.name} Commands', description=f"Utilize the dropdown menu to select help pages.{ttr}", color= ctx.author.color)
         embed.add_field(name = "💁 **Help Modules:**", value = "Page 1 | SysBot Commands\nPage 2 | Pokemon Files Commands\nPage 3 | Miscellaneous Commands\nPage 4 | Management Commands\nPage 5 | Moderation Commands\nPage 6 | Switch Commands\nPage 7 | Owner Commands\nPage 8 | Bot Management Commands", inline = True)
