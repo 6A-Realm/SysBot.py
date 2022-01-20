@@ -1,7 +1,7 @@
 # This is your configuration file.
 
 # General configuration settings
-token: Token.goes.here
+token: token.goes.here
 defaultprefix: + 
 color: 0xFFA500 #Include 0x
 support-server-name: Pokemon EX Realm
@@ -14,21 +14,22 @@ donation: None
 # General Switch settings
 ip: 10.0.0.164
 port: 6000
-directory: C:\Users\Laptop\Downloads\SysBot.py\res\screen.jpg
-
-##Advanced sysbot settings
-autolauncher: 2 # Key: 0 == means ask, 1 == yes, 2 == No
-autoscreen: 2 # Key: 1 == screen on, 2 == screen off
-system-screenshot: True # True == screen shots for remote commands, False == no screen shots
+directory: C:\UsersDownloads\SysBot.py-main\SysBot.py-main\res\screen.jpg
 
 # Dashboard configuration settings
 client-id: 882420846243749959
-client-secret: secret-id-here
+client-secret: e789czb99uhsad98cc
+
+##Advanced sysbot settings
+autolauncher: 0 # Key: 0 == means ask, 1 == yes, 2 == No
+autoscreen: 1 # Key: 1 == screen on, 2 == screen off
+system-screenshot: True # True == screen shots for remote commands, False == no screen shots
 
 # Twitch settings
-toggle: 2 # Key: 1 means launch twitch bot, 2 means dont launch
+twitch: 2 # Key: 1 means launch twitch bot, 2 means dont launch
 tmitoken:
 clientid:
 botnickname:
 botprefix:
 channel:
+notificationdiscord: 908195847349612564

@@ -24,10 +24,10 @@ class presence(commands.Cog):
         length = len(queuelength)
         queue = random.randint(5,45) 
         if length > 0:
-            await self.client.change_presence(activity=discord.Game(name=f"Trading with {length} members"))
+            await self.client.change_presence(activity = discord.Game(name = f"Trading with {length} members"))
             await asyncio.sleep(queue)
         else:
-            await self.client.change_presence(activity=discord.Game(status=discord.Status.idle, name=f"SysBot queue is empty"))
+            await self.client.change_presence(status = discord.Status.idle, activity = discord.Game(name=f"SysBot queue is empty"))
             await asyncio.sleep(queue)
 
         playing = random.randint(5,45) 

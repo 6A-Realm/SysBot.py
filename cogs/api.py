@@ -67,8 +67,8 @@ class api(commands.Cog):
                     response = loads((await (await requests.post(pinfo, data={"pokemon": data})).content.read()).decode("utf-8"))
                     await check(ctx, response)
 
-            else:
-                return await ctx.channel.send("Ensure your file is valid, created from PKHeX.")
+                else:
+                    return await ctx.channel.send("Ensure your file is valid, created from PKHeX.")
 
     @commands.command()
     @commands.guild_only()

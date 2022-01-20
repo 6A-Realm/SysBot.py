@@ -10,6 +10,7 @@ from discord_slash import SlashCommand
 from colorama import Fore
 import ctypes
 from rich.console import Console
+import subprocess
 import json
 
 # Loads token and autolauncher from config file
@@ -17,6 +18,7 @@ with open("config.yaml") as file:
     data = load(file)
     token = data["token"]
     autolauncher = data["autolauncher"]
+    twitch = data["twitch"]
 
 # Fetch prefix 
 def get_prefix(client, message):        
@@ -26,7 +28,7 @@ def get_prefix(client, message):
     return commands.when_mentioned_or(*prefix)(client, message)
 
 ##Simple bot settings like mentioning as a prefix, settings all intents to true, deleting built in discord.py help command
-client = commands.AutoShardedBot(description="SysBot 2.0.2", command_prefix=get_prefix, intents=discord.Intents.all(), help_command = None, pm_help = False)
+client = commands.AutoShardedBot(description="SysBot 2.0.3", command_prefix=get_prefix, intents=discord.Intents.all(), help_command = None, pm_help = False)
 slash = SlashCommand(client, sync_commands=True)
 pokemon = ["connection"] 
 pdiscord = ["advanced", "pokeinput", "queue", "remote", "trader"]
@@ -66,7 +68,7 @@ async def on_ready():
             except Exception as e:
                 console.print(f"Unable to load {extension} {e}.", style="red")
 
-    elif autolauncher ==2:
+    elif autolauncher == 2:
         console.print('The bot will launch without sysbot commands.', style="blue")
 
     else:
@@ -85,6 +87,8 @@ async def on_ready():
                     console.print(f"Unable to load {extension} {e}.", style="red")
         else:
             print('The bot will launch without sysbot commands.')
+    if twitch == 1:
+        subprocess.Popen('python pokemon/twitch.py')
 
 # Build Plugins List
 plugins = []

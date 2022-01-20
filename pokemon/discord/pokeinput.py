@@ -23,8 +23,6 @@ with open("advanced/blacklist.yaml", encoding='utf-8') as file:
 coreapi = "https://coreapi-production.up.railway.app/api/PokemonInfo"
 bdspshowdown = "https://7d256e9c7525.up.railway.app/pokemon/BDSP/showdown"
 
-# Convert 
-
 # Check legality
 async def check(ctx, pkx, attachment, response, user):
     # Send to coreapi instance 
@@ -127,7 +125,6 @@ class request(commands.Cog):
                 response = loads((await (await requests.post(coreapi, data={"pokemon": data})).content.read()).decode("utf-8"))
                 
                 await check(ctx, pkx, attachment, response, user)
-
 
             else:
                 await ctx.send("Incorrect command usage. Either provide a valid file or showdown set.")

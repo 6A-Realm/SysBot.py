@@ -54,10 +54,15 @@ class owner(commands.Cog):
 
     @commands.command(help="Leaves server from directed guild.", brief="leave <serverid>")
     @commands.is_owner()
-    async def leave(self, ctx, guildid: int):
-        guild = self.client.get_guild(guildid)
-        await guild.leave()
-        await ctx.send(f"I left {guild.name}.")
+    async def leave(self, ctx, guildid: int = None):
+        if guildid is None:
+            await ctx.send("Leaving this server.")
+            await ctx.guild.leave()
+        else:
+            guild = self.client.get_guild(guildid)
+            await guild.owner.send(f"Hello {guild.owner}, {ctx.author} removed me from {guild.name}. Do not reinvite the bot back.")
+            await guild.leave()
+            await ctx.send(f"I left {guild.name}.")
 
     @commands.command(help="Create a guild.", brief="createguild <prefered name>")
     @commands.is_owner()
