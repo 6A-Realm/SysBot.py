@@ -1,16 +1,14 @@
 import discord
-from discord import client
 from discord.ext import commands
-from discord.ext.commands.core import command
 import yaml
-from yaml import load, dump
+from yaml import load
 
 # Simple file reader to load channels
 with open("advanced/ban.yaml", encoding='utf-8') as file:
     data = load(file)
     channels = data["ban"]
     
-class moderation(commands.Cog):
+class Moderation(commands.Cog):
     def __init__(self, client):
         self.client = client
 
@@ -104,13 +102,6 @@ class moderation(commands.Cog):
         user = await self.client.fetch_user(id)
         await ctx.guild.unban(user)
         await ctx.send(f'{user.name} was unbanned')
-
-    @commands.command(pass_context=True)
-    async def userinfo(self, ctx, user: discord.Member = None):
-        if user is None:
-            user = ctx.author
-        embed = discord.Embed(title = 'Who is' + '{}'.format(user.name), description=f"Discord tag: {ctx.user.tag}\nDiscord ID: {ctx.user.id}\nJoined server: {user.joined_at.strftime('%A, %B %d %Y')})\nAccount created: {user.created_at.strftime('%A, %B %d %Y')})", icon_url=ctx.user.avatar_url, color=ctx.author.color)
-        await ctx.channel.send(embed = embed)
 
     @commands.command()
     @commands.has_permissions(kick_members=True)
@@ -208,4 +199,4 @@ class moderation(commands.Cog):
 
 
 def setup(client):
-    client.add_cog(moderation(client))
+    client.add_cog(Moderation(client))

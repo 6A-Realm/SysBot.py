@@ -2,8 +2,6 @@ import discord
 from discord.ext import commands
 from yaml import load
 from discord_slash import cog_ext, SlashContext
-from discord_components import DiscordComponents, SelectOption, Select, Button, ButtonStyle
-import asyncio
 import os
 import json
 
@@ -12,10 +10,9 @@ with open("config.yaml") as file:
         data = load(file)
         support2 = data["support-server-invite"]
 
-class slash(commands.Cog):
+class SLASH(commands.Cog):
     def __init__(self, client):
         self.client = client
-        DiscordComponents(self.client)
 
 # {-- Public Slash Commands --}
     @cog_ext.cog_slash(name="guide", description="How to use Sysbot guide")
@@ -59,4 +56,4 @@ class slash(commands.Cog):
         await ctx.send(f'My prefix in this server is: `{prefix}`')
 
 def setup(client):
-    client.add_cog(slash(client))
+    client.add_cog(SLASH(client))

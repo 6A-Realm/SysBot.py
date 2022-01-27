@@ -9,7 +9,7 @@ import aiofiles
 
 # API links
 pinfo = "https://coreapi-production.up.railway.app/api/PokemonInfo"
-bdspshowdown = "https://7d256e9c7525.up.railway.app/pokemon/BDSP/showdown"
+bdspshowdown = "https://pokegenpkhex-production.up.railway.app/pokemon/BDSP/showdown"
 
 # Legality check 
 async def check(ctx, response):
@@ -29,14 +29,14 @@ async def check(ctx, response):
         await ctx.reply(embed = embed)
 
 # Cog 
-class api(commands.Cog):
+class API(commands.Cog):
     def __init__(self, client):
         self.client = client
 
 # {-- Public Commands --}
     @commands.command()
     @commands.guild_only()
-    async def legal(self, ctx, set: str = None):
+    async def legal(self, ctx, *, set: str = None):
 
         if not set and len(ctx.message.attachments) != 0:
             for attachment in ctx.message.attachments:                
@@ -149,7 +149,7 @@ class api(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    async def convert(self, ctx, set: str = None):
+    async def convert(self, ctx, *, set: str = None):
 
         if set is not None:
 
@@ -180,4 +180,4 @@ class api(commands.Cog):
 
 
 def setup(client):
-    client.add_cog(api(client))
+    client.add_cog(API(client))

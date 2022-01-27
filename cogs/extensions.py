@@ -1,6 +1,6 @@
 import discord.ext.commands as commands
 
-class extensions(commands.Cog):
+class Extensions(commands.Cog):
     def __init__(self, client):
         self.client = client
 
@@ -41,4 +41,4 @@ class extensions(commands.Cog):
 
 
 def setup(client):
-    client.add_cog(extensions(client))
+    client.add_cog(Extensions(client))

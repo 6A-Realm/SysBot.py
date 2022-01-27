@@ -19,7 +19,7 @@ with open("config.yaml") as file:
     support2 = data["support-server-invite"]
     dmchannel = data["dmchannel"]
 
-class Events(commands.Cog):
+class EVENTS(commands.Cog):
     def __init__(self, client):
         self.client = client
 
@@ -110,4 +110,4 @@ class Events(commands.Cog):
         print(f"Client left {guild.name}")
 
 def setup(client):
-        client.add_cog(Events(client))
+        client.add_cog(EVENTS(client))

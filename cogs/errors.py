@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound
 
-class ErrorHandler(commands.Cog):
+class ERRORS(commands.Cog):
     def __init__(self, client):
         self.client = client
 
@@ -36,5 +36,6 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.NotOwner):
             await ctx.send("Only the owner of this bot can use that command.")
 
+
 def setup(client):
-        client.add_cog(ErrorHandler(client))
+        client.add_cog(ERRORS(client))

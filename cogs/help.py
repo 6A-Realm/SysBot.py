@@ -1,10 +1,10 @@
 import discord
 from discord.ext import commands
 from yaml import load
-import json
 import psutil
 from discord_components import DiscordComponents, SelectOption, Select, Button, ButtonStyle
 import asyncio
+DiscordComponents(commands.AutoShardedBot)
 
 with open("config.yaml") as file:
     data = load(file)
@@ -109,49 +109,52 @@ botmanval = str(f"""
  ⋅ shutdown: Turns off the bot.
 """)
 
-class help(commands.Cog):
-    def __init__(self, client):
-        self.client = client
-        DiscordComponents(self.client)
-
-    @commands.command()
-    async def help(self, ctx):
-        with open("res/prefix.json", "r") as f:
-            prefixes = json.load(f)
-        prefix = prefixes[str(ctx.message.guild.id)]
-
-        ttr = str(f"""
+ttr = str(f"""
 ```yaml
-Prefix: {prefix} - Required Parameter: <> - Optional Parameter: ()
+Required Parameter: <> - Optional Parameter: ()
 ```
-        """)
+""")
+
+# Help builder
+class help(commands.MinimalHelpCommand):
+    def __init__(self):
+        super().__init__()
+
+    def get_opening_note(self):
+        return()
+
+    async def send_pages(self):
+        for description in self.paginator.pages:
+            help = discord.Embed(description = ttr + description, color = self.context.author.color)
+            help.set_thumbnail(url = self.context.me.avatar_url)
+
         # Embeds
-        embed=discord.Embed(title=f'{self.client.user.name} Commands', description=f"Utilize the dropdown menu to select help pages.{ttr}", color= ctx.author.color)
+        embed=discord.Embed(title=f'{self.context.me.name} Commands', description=f"Utilize the dropdown menu to select help pages.{ttr}", color= self.context.author.color)
         embed.add_field(name = "💁 **Help Modules:**", value = "Page 1 | SysBot Commands\nPage 2 | Pokemon Files Commands\nPage 3 | Miscellaneous Commands\nPage 4 | Management Commands\nPage 5 | Moderation Commands\nPage 6 | Switch Commands\nPage 7 | Owner Commands\nPage 8 | Bot Management Commands", inline = True)
-        embed.add_field(name = "ℹ️ **Bot Info:**", value = f"Servers: {len(self.client.guilds)}\nUsers: {len(self.client.users)}\nCommands: {len(self.client.commands)}\nCPU: {psutil.cpu_percent()}%\nMemory: {psutil.virtual_memory().percent}%", inline = True)
-        
-        sysbot = discord.Embed(title = 'SysBot Module', description = ttr, color = ctx.author.color)
+        embed.add_field(name = "ℹ️ **Bot Info:**", value = f"Servers: {len(self.context.bot.guilds)}\nUsers: {len(self.context.bot.users)}\nCommands: {len(self.context.bot.commands)}\nCPU: {psutil.cpu_percent()}%\nMemory: {psutil.virtual_memory().percent}%", inline = True)
+
+        sysbot = discord.Embed(title = 'SysBot Module', description = ttr, color = self.context.author.color)
         sysbot.add_field(name = "SysBot Commands", value = sysbotval, inline = True)
         
-        files = discord.Embed(title = 'Files Module', description = ttr, color = ctx.author.color)
+        files = discord.Embed(title = 'Files Module', description = ttr, color = self.context.author.color)
         files.add_field(name = "Pkx and Ekx Search Commands", value = filesval, inline = True)
         
-        general = discord.Embed(title = 'Miscellaneous Module', description = ttr, color = ctx.author.color)
+        general = discord.Embed(title = 'Miscellaneous Module', description = ttr, color = self.context.author.color)
         general.add_field(name = "General Commands", value = miscellaneousval, inline = True)
         
-        amanagement = discord.Embed(title = 'Channel Management Module', description = ttr, color = ctx.author.color)
+        amanagement = discord.Embed(title = 'Channel Management Module', description = ttr, color = self.context.author.color)
         amanagement.add_field(name = "Channel Commands", value = chanval, inline = True)
         
-        moderation = discord.Embed(title = 'Moderation Module', description = ttr, color = ctx.author.color)
+        moderation = discord.Embed(title = 'Moderation Module', description = ttr, color = self.context.author.color)
         moderation.add_field(name = "Server Moderation Commands", value = modval, inline = True)
         
-        sremote = discord.Embed(title = 'Switch Module', description = ttr, color = ctx.author.color)
+        sremote = discord.Embed(title = 'Switch Module', description = ttr, color = self.context.author.color)
         sremote.add_field(name = "Switch Remote Control Commands", value = remoteval, inline = True)
         
-        owner = discord.Embed(title = 'Owner Module', description = ttr, color = ctx.author.color)
+        owner = discord.Embed(title = 'Owner Module', description = ttr, color = self.context.author.color)
         owner.add_field(name = "Owner Only Commands", value = ownerval, inline = True)
         
-        omanagement = discord.Embed(title = 'Bot Management Module', description = ttr, color = ctx.author.color)
+        omanagement = discord.Embed(title = 'Bot Management Module', description = ttr, color = self.context.author.color)
         omanagement.add_field(name = "Bot Management Commands", value = botmanval, inline = True)
 
         components = [
@@ -159,6 +162,7 @@ Prefix: {prefix} - Required Parameter: <> - Optional Parameter: ()
                 Select(
                     placeholder = "Select a help menu",
                     options = [
+                        SelectOption(label = "All SysBot.py Commands", value = "allcommands"),
                         SelectOption(label = "Page 1 | SysBot Module", value = "sysbot"),
                         SelectOption(label = "Page 2 | Files Module", value = "files"),
                         SelectOption(label = "Page 3 | Miscellaneous Module", value = "general"),
@@ -175,11 +179,13 @@ Prefix: {prefix} - Required Parameter: <> - Optional Parameter: ()
             ]
         ]
 
-        message = await ctx.reply(embed = embed, components = components)
+        message = await self.context.reply(embed = embed, components = components)
 
         while(True):
             try:
-                interaction = await self.client.wait_for("select_option", check = None, timeout = 30)
+                interaction = await self.context.bot.wait_for("select_option", check = None, timeout = 30)
+                if interaction.values[0] == "allcommands":
+                    await interaction.respond(type = 7, ephemeral = False, embed = help)
                 if interaction.values[0] == "sysbot":
                     await interaction.respond(type = 7, ephemeral = False, embed = sysbot)
                 if interaction.values[0] == "files":
@@ -200,6 +206,16 @@ Prefix: {prefix} - Required Parameter: <> - Optional Parameter: ()
                 await message.disable_components()
                 return
 
+    async def send_error_message(self):
+        return
+
+class HELP(commands.Cog):
+    def __init__(self, client):
+        self.client = client
+        
+        help_command = help()
+        help_command.cog = self
+        client.help_command = help_command
 
 def setup(client):
-    client.add_cog(help(client))
+    client.add_cog(HELP(client))

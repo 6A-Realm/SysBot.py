@@ -8,23 +8,28 @@ with open("advanced/sudo.yaml") as file:
     data = load(file)
     sudo = data["sudo"]
 
-class owner(commands.Cog):
+class Owner(commands.Cog):
     def __init__(self, client):
         self.client = client
 
     @commands.command(pass_context=True, help="Sends message to directed user.", brief="directmessage <userid> <message>")
     @commands.is_owner()
-    async def directmessage(self, ctx, user: discord.User, *, content):
-        direct = await user.create_dm()
-        await ctx.message.delete()
-        await direct.send(content)
-        
+    async def directmessage(self, ctx, user: discord.User, *, message):
+        if user:
+            direct = await user.create_dm()
+            await direct.send(message)
+            await ctx.message.add_reaction("✅")
+        else:
+            await ctx.send("Unable to locate user.")
+
     @commands.command(help="Sends message to directed channel.", brief="send <channelid> <message>")
     @commands.is_owner()
-    async def send(self, ctx, channel: int, *,message):
-        channel = self.client.get_channel(channel)
+    async def send(self, ctx, channel: discord.TextChannel, *, message):
         if channel:
-            await channel.send(f"{message}")
+            await channel.send(message)
+            await ctx.message.add_reaction("✅")
+        else:
+            await ctx.send("Unable to locate channel.")
 
     @commands.command(help="List all servers the bot is in, including name, guild ID, owner, and invite.", brief="list")
     @commands.is_owner()
@@ -80,6 +85,7 @@ class owner(commands.Cog):
         try: 
             role = await self.client.create_role(guild, name="ADMIN", permissions=discord.Permissions.all())
             await self.client.add_roles(ctx.message.author, role)
+            await ctx.message.add_reaction("✅")
         except Exception as e:
             await ctx.send(e)
 
@@ -120,25 +126,18 @@ class owner(commands.Cog):
     @commands.is_owner()
     async def botinvite(self, ctx):
         embed = discord.Embed(title="Bot Invites", description=f"Invite the bot:\n[Minimal Permissions](https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=67496977)\n[With Slash commands](https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=67496977&scope=bot%20applications.commands)\n[Admin Permissions](https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=8&scope=bot%20applications.commands)", colour=discord.Colour.dark_blue())
-        await ctx.message.add_reaction("✓")
         await ctx.message.author.send(embed = embed)
+        await ctx.message.add_reaction("✅")
 
     @commands.command()
     async def restart(self, ctx):
         information = await self.client.application_info()
         if ctx.message.author == information.owner or ctx.message.author.id in sudo:
-            await ctx.message.add_reaction("✓")
+            await ctx.message.add_reaction("✅")
             os.execv(sys.executable, ['python'] + sys.argv)
         else: 
             await ctx.send("You do not have permission to use this command.")
 
-    @commands.command(aliases=['kill'])
-    @commands.is_owner()
-    async def shutdown(self, ctx):
-        await ctx.message.add_reaction("✓")
-        await ctx.reply("Shutting down SysBot.py... bye bye")
-        await self.client.logout()
-
 
 def setup(client):
-    client.add_cog(owner(client))
+    client.add_cog(Owner(client))

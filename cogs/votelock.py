@@ -4,7 +4,7 @@ from discord.ext import commands
 voted = []
 votes = []
 
-class votelock(commands.Cog):
+class Votelock(commands.Cog):
     def __init__(self, client):
         self.client = client
 
@@ -52,4 +52,4 @@ class votelock(commands.Cog):
 
 
 def setup(client):
-    client.add_cog(votelock(client))
+    client.add_cog(Votelock(client))

@@ -8,7 +8,7 @@ with open("config.yaml") as file:
     data = load(file)
     embedcolor = data["color"]
     
-class poll(commands.Cog):
+class Polling(commands.Cog):
     def __init__(self, client):
         self.client = client
 
@@ -90,4 +90,4 @@ class poll(commands.Cog):
 
 
 def setup(client):
-    client.add_cog(poll(client))
+    client.add_cog(Polling(client))

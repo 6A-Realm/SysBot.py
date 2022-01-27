@@ -21,7 +21,7 @@ with open("advanced/blacklist.yaml", encoding='utf-8') as file:
 
 # API links
 coreapi = "https://coreapi-production.up.railway.app/api/PokemonInfo"
-bdspshowdown = "https://7d256e9c7525.up.railway.app/pokemon/BDSP/showdown"
+bdspshowdown = "https://pokegenpkhex-production.up.railway.app/pokemon/BDSP/showdown"
 
 # Check legality
 async def check(ctx, pkx, attachment, response, user):
@@ -62,7 +62,7 @@ class request(commands.Cog):
 # {-- Request Module --}
     @commands.command()
     @commands.guild_only()
-    async def ttrade(self, ctx, set: str = None):
+    async def ttrade(self, ctx, *, set: str = None):
         user = ctx.message.author.id
         if user in userblacklist:
             return await ctx.send("User is blacklisted from using the bot.")

@@ -3,7 +3,7 @@ from discord.ext import commands
 import json
 import asyncio
 
-class admin(commands.Cog):
+class Management(commands.Cog):
     def __init__(self, client):
         self.client = client
 
@@ -72,4 +72,4 @@ class admin(commands.Cog):
 
 
 def setup(client):
-    client.add_cog(admin(client))
+    client.add_cog(Management(client))

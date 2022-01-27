@@ -11,7 +11,7 @@ with open("config.yaml") as file:
     support2 = data["support-server-invite"]
     donation = data["donation"]
 
-class miscellaneous(commands.Cog):
+class Miscellaneous(commands.Cog):
     def __init__(self, client):
         self.client = client
 
@@ -47,10 +47,8 @@ class miscellaneous(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command()
-    async def channelid(self, ctx, *, name = None):
-        channel = discord.utils.get(ctx.guild.channels, name = name)
-        id = channel.id
-        await ctx.send(id) 
+    async def channelid(self, ctx):
+        await ctx.send(ctx.message.channel.id) 
 
     @commands.command()
     @commands.guild_only()
@@ -82,56 +80,36 @@ class miscellaneous(commands.Cog):
     @commands.guild_only()
     async def servericon(self, ctx):
         icon = ctx.guild.icon_url
-        await ctx.send(icon)    
+        try:
+            await ctx.send(icon)    
+        except Exception as e:
+            await ctx.send("Server has no icon.")
 
-    @commands.command(name='sinfo', aliases=['server'])
-    async def serverinfo(self, ctx, *, name:str = ""):
-        """Get server info"""
-        if name:
-            server = None
-            try:
-                server = self.bot.get_guild(int(name))
-                if not server:
-                    return await ctx.send('Server not found :satellite_orbital:')
-            except:
-                for i in self.bot.guilds:
-                    if i.name.lower() == name.lower():
-                        server = i
-                        break
-                if not server:
-                    return await ctx.send("Server not found :satellite_orbital: or maybe I'm not in it")
-        else:
+    @commands.command()
+    async def serverinfo(self, ctx, server: discord.Guild = None):
+        if server is None:
             server = ctx.guild
+        embed = discord.Embed(title = server.name, color = 0x00CC99)
+        embed.add_field(name = "Owner:", value = f"{server.owner}")
+        embed.add_field(name = "Members:", value = f"{server.member_count}")
+        embed.add_field(name = "Channels:", value = len([x for x in server.channels if type(x) == discord.channel.TextChannel]))
+        embed.add_field(name = "Roles:", value = len(server.roles))
+        embed.add_field(name = "Region:", value = str(server.region).title())
+        embed.add_field(name = "Created:", value = server.created_at.__format__("%A, %B %d, %Y at %H:%M:%S"))
+        embed.set_thumbnail(url = server.icon_url)
+        await ctx.send(embed=embed)
 
-        # Count channels
-        tchannel_count = len([x for x in server.channels if type(x) == discord.channel.TextChannel])
-        vchannel_count = len([x for x in server.channels if type(x) == discord.channel.VoiceChannel])
-        # Count roles
-        role_count = len(server.roles)
-        # Count emojis
-        emojis = len(server.emojis)
-        # Count bots
-        bot_count = len([x for x in server.members if x.bot])
-
-        # Create embed
-        em = discord.Embed(color=0x00CC99)
-        em.set_author(name='Server Info:', icon_url=server.owner.avatar_url)
-        em.add_field(name='Name', value=f'`{server.name}`')
-        em.add_field(name='Owner', value=f'`{server.owner}`', inline=False)
-        em.add_field(name='Members', value=f'`{server.member_count - bot_count}`')
-        em.add_field(name='Bots', value=f'`{bot_count}`')
-        em.add_field(name='Emojis', value=f'`{emojis}`')
-        em.add_field(name='Text Channels', value=f'`{tchannel_count}`')
-        em.add_field(name='Voice Channels', value=f'`{vchannel_count}`')
-        em.add_field(name='Verification Level', value=f'`{str(server.verification_level).title()}`')
-        em.add_field(name='Number of roles', value=f'`{role_count}`')
-        em.add_field(name='Highest role', value=f'`{server.roles[-1]}`')
-        em.add_field(name='Region', value=f'`{str(server.region).title()}`')
-        em.add_field(name='Created At', value=f"`{server.created_at.__format__('%A, %d. %B %Y @ %H:%M:%S')}`", inline=False)
-        em.set_thumbnail(url=server.icon_url)
-        em.set_footer(text='Server ID: %s' % server.id)
-
-        await ctx.send(embed=em)
+    @commands.command(pass_context=True)
+    async def userinfo(self, ctx, user: discord.Member = None):
+        if user is None:
+            user = ctx.author
+        embed = discord.Embed(title = "Member Info", color = user.color)
+        embed.add_field(name = "Name", value = user.display_name)
+        embed.add_field(name = "ID:", value = user.id)
+        embed.add_field(name = "Created:", value = user.created_at.__format__("%A, %B %d, %Y at %H:%M:%S"))
+        embed.add_field(name = "Joined:", value = user.joined_at.__format__("%A, %B %d, %Y at %H:%M:%S"))
+        embed.set_thumbnail(url = user.avatar_url)
+        await ctx.channel.send(embed = embed)
 
     @commands.command()
     async def remind(self, ctx, duration, *, reminder):
@@ -154,15 +132,9 @@ class miscellaneous(commands.Cog):
         await ctx.send(f"⏰ You are being reminded to **{reminder}**")
 
     @commands.command()
-    @commands.guild_only()
-    async def botperms(self, ctx, *, channel: discord.TextChannel = None):
-        channel = channel or ctx.channel
-        member = ctx.guild.me
-        await self.say_permissions(ctx, member, channel)
-
-    @commands.command()
     async def sysbotbase(self, ctx):
         await ctx.reply("https://github.com/olliz0r/sys-botbase/releases/latest")
 
+
 def setup(client):
-    client.add_cog(miscellaneous(client))
+    client.add_cog(Miscellaneous(client))

@@ -23,15 +23,17 @@ class trader(commands.Cog):
     @tasks.loop()
     async def trader(self):
         await self.client.wait_until_ready()
+
+        # Look for another stay awake protocol
+        '''# Stay awake protocol 
+        if len(queuelist) == 0:
+                switch(serv, "click B")
+                await asyncio.sleep(5)'''   
+
+        # Trade handler
         if len(queuelist) > 0:
             user = queuelist[0]
             queued = get(self.client.get_all_members(), id = user)
-
-            # Stay awake protocol
-            if queued is None:
-                while (True):
-                    switch(serv, "click B")
-                    await asyncio.sleep(15)
 
             if queued != None:
                 switch(serv, "getTitleID")
@@ -49,11 +51,10 @@ class trader(commands.Cog):
                         injection = str(binascii.hexlify(injection), "utf-8")
 
                         # Inject into box 1 slot 1
-                        for i in range(2):
-                            switch(serv, f"pointerPoke 0x{injection} {b1s1}")
+                        switch(serv, f"pointerPoke 0x{injection} {b1s1}")
 
                         # Opening trade menu to internet
-                        console.log(f"Opening the trade menu. Queuing: {queued.name}.", style="green")
+                        console.log(f"Opening the trade menu. Queuing: {queued.name}.", style = "green")
                         switch(serv, "click Y")
                         await asyncio.sleep(1)
                         switch(serv, "setStick RIGHT 0x7FFF 0x0")
@@ -82,7 +83,7 @@ class trader(commands.Cog):
                         for x in range(3):
                             switch(serv, "click A")
                             await asyncio.sleep(1)
-                        await asyncio.sleep(30)
+                        await asyncio.sleep(10)
                         switch(serv, "click Y")
                         await asyncio.sleep(1)
                         switch(serv, "click A")
@@ -91,10 +92,10 @@ class trader(commands.Cog):
                         switch(serv, "setStick RIGHT yVal 0x0000")
                         await asyncio.sleep(1)
                         switch(serv, "click A")
-                        await asyncio.sleep(30)
+                        await asyncio.sleep(50)
 
                         # Assuming dude actually connects to the bot > initialize trade
-                        console.print("Trade initalizing assuming connection was made.", style="yellow")
+                        console.print("Trade initalizing assuming connection was made.", style = "yellow")
                         for x in range(6):
                             switch(serv, "click A")
                             await asyncio.sleep(3)
@@ -102,7 +103,7 @@ class trader(commands.Cog):
                         await asyncio.sleep(50)
 
                         # Backing out to over world
-                        console.print(f'Backing out to overworld.', style="magenta")
+                        console.print(f'Backing out to overworld.', style = "magenta")
                         switch(serv, "click B")
                         await asyncio.sleep(1)
                         switch(serv, "setStick RIGHT yVal 0x7FFF")
@@ -128,15 +129,17 @@ class trader(commands.Cog):
                         fileOut = open(filepath2, "wb")
                         fileOut.write(binascii.unhexlify(read))
                         fileOut.close()
+                        console.print(f'Dumped {filepath2}.', style = "red")
                         await asyncio.sleep(0.5)
                         file = discord.File(filepath2)
                         await queued.send(file = file, content = success)
-                        console.print(f'Trade completed with {queued}.', style="green")
-                        os.remove(filepath1)
+                        console.print(f'Trade completed with {queued}.', style = "green")
 
                         # End
                         queuelist.remove(user)
-                        console.print("Ready for next trade.", style="bold underline white")
+                        console.print("Ready for next trade.", style = "bold underline white")
+                        await asyncio.sleep(1)
+
                     else:
                         queuelist.remove(user)
                         await queued.send(errormessage)

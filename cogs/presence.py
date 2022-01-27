@@ -10,7 +10,7 @@ queuelength = []
 game = ["Pokémon"]
 
 # Cog 
-class presence(commands.Cog):
+class PRESENCE(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.presence.start()
@@ -44,4 +44,4 @@ class presence(commands.Cog):
 
 
 def setup(client):
-    client.add_cog(presence(client))
+    client.add_cog(PRESENCE(client))
