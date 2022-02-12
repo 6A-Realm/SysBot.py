@@ -84,14 +84,14 @@ class queued(commands.Cog):
     @queue.group()
     @commands.is_owner()
     async def close(self, ctx):
-        ctx.client.unload_extension("pokemon.discord.pokeinput")
+        self.client.unload_extension("pokemon.discord.pokeinput")
         await ctx.reply("Queues are now closed.")
 
     @queue.group()
     @commands.is_owner()
     async def open(self, ctx):
         try:
-            ctx.client.load_extension("pokemon.discord.pokeinput")
+            self.client.load_extension("pokemon.discord.pokeinput")
             await ctx.reply("Queues are now open.")
         except commands.ExtensionAlreadyLoaded:
             await ctx.send("Queues are already open.")

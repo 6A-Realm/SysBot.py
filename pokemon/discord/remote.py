@@ -1,10 +1,10 @@
-from pokemon.connection.wireless import switch, serv
-from pokemon.utils.values import bd, sp
+import pokemon.connection.wireless as sysbot
+from pokemon.utils.values import sw, sh, bd, sp, b1s1
 from yaml import load
+import aiofiles
 import discord
 from discord.ext import commands
 import asyncio
-import pyautogui
 import typing
 import binascii
 
@@ -21,12 +21,17 @@ with open("advanced/sudo.yaml") as file:
     sudo = data["sudo"]
 
 # Screen shot protocol
-async def protocol(ctx):
+async def protocol(self, ctx):
     if screenshot != True:
         return
+    await asyncio.sleep(0.5)
+    connection = sysbot.connection(self.client)
+    await connection.connect()
+    await connection.switch("pixelPeek")       
     await asyncio.sleep(1)
-    screen = pyautogui.screenshot()
-    screen.save(dir)
+    screen = binascii.unhexlify((await connection._r.readline())[:-1])
+    async with aiofiles.open("res/screen.jpg", "wb") as f:
+        await f.write(screen)
     embed = discord.Embed(color=0xFFD700)
     image = discord.File("res/screen.jpg", filename="screen.jpg")
     embed.set_image(url="attachment://screen.jpg")
@@ -44,7 +49,6 @@ class remote(commands.Cog):
             return ctx.message.author == information.owner or ctx.message.author.id in sudo
         return commands.check(check)
 
-# {-- Remote Control --}
 # {-- Select, Directional, and Menu Buttons --}
     @commands.command()
     @lock()
@@ -58,36 +62,38 @@ class remote(commands.Cog):
             await ctx.send(embed=embed)
 
         singles = ["X", "A", "B", "Y", "PLUS", "MINUS", "HOME", "CAPTURE"]
+        connection = sysbot.connection(self.client)
+        await connection.connect()
         check = value.upper()
         if (check in singles):
                 for x in range(amount):
-                    switch(serv, f"click {check}")
-                    await asyncio.sleep(1)
-                await protocol(ctx)
+                    await connection.switch(f"click {check}")
+                    await asyncio.sleep(0.5)
+                await protocol(self, ctx)
 
         elif check == "UP":
             for up in range(amount):
-                switch(serv, "setStick RIGHT yVal 0x7FFF")
-                switch(serv, "setStick RIGHT yVal 0x0000")
-                await asyncio.sleep(1)
-            await protocol(ctx)
+                await connection.switch("setStick RIGHT yVal 0x7FFF")
+                await connection.switch("setStick RIGHT yVal 0x0000")
+                await asyncio.sleep(0.5)
+            await protocol(self, ctx)
         elif check == "RIGHT":
             for right in range(amount):
-                switch(serv, "setStick RIGHT 0x7FFF 0x0")
-                switch(serv, "setStick RIGHT 0x0 0x0")
-                await asyncio.sleep(1)
-            await protocol(ctx)
+                await connection.switch("setStick RIGHT 0x7FFF 0x0")
+                await connection.switch("setStick RIGHT 0x0 0x0")
+                await asyncio.sleep(0.5)
+            await protocol(self, ctx)
         elif check == "DOWN":
             for down in range(amount):
-                switch(serv, "setStick RIGHT yVal -0x8000")
-                switch(serv, "setStick RIGHT yVal 0x0000")
-                await asyncio.sleep(1)
-            await protocol(ctx)
+                await connection.switch("setStick RIGHT yVal -0x8000")
+                await connection.switch("setStick RIGHT yVal 0x0000")
+                await asyncio.sleep(0.5)
+            await protocol(self, ctx)
         elif check == "LEFT":
             for left in range(amount):
-                switch(serv, "setStick RIGHT -0x8000 0x0")
-                switch(serv, "setStick RIGHT 0x0 0x0")
-            await protocol(ctx)
+                await connection.switch("setStick RIGHT -0x8000 0x0")
+                await connection.switch("setStick RIGHT 0x0 0x0")
+            await protocol(self, ctx)
             
         else:
             await ctx.send(embed=embed)
@@ -96,9 +102,11 @@ class remote(commands.Cog):
     @lock()
     async def spamb(self, ctx):
         for b in range(15):
-            switch(serv, "click B")
-            await asyncio.sleep(1)
-        await protocol(ctx)
+            connection = sysbot.connection(self.client)
+            await connection.connect()
+            await connection.switch("click B")
+            await asyncio.sleep(0.5)
+        await protocol(self, ctx)
 
 # { -- Pokemon commands --}
     @commands.command()
@@ -111,33 +119,36 @@ class remote(commands.Cog):
         if function is None:
             await ctx.send(embed=embed)
         check = function.lower()
+        connection = sysbot.connection(self.client)
+        await connection.connect()
+        await connection.switch("getTitleID")
+        title = ((await connection._r.read(689))[:-1]).decode("utf-8")
         if check == "inject":
-            switch(serv, "getTitleID")
-            title = serv.recv(689)
-            title = title[0:-1]
-            title = str(title,'utf-8')
             if title == bd or sp:
-                fileIn = open("Files/sysbot/inject.eb8", "rb")
-                pokemonToInject = fileIn.read(344)
-                pokemonToInject = str(binascii.hexlify(pokemonToInject), "utf-8")
-                switch(serv, f"pointerPoke 0x{pokemonToInject} 0x4E34DD0 0xB8 0x10 0xA0 0x20 0x20 0x20")
+                input = open("Files/sysbot/inject.eb8", "rb")
+                inject = str(binascii.hexlify(input.read(344)).decode("utf-8"))
+                await connection.switch(f"pointerPoke 0x{inject} {b1s1}")
+                await ctx.send("Pokemon injected.")
+            elif title == sw or sh:
+                input = open("Files/sysbot/inject.ek8", "rb")
+                inject = str(binascii.hexlify(input.read(344)).decode("utf-8"))
+                await connection.switch(f"pointerPoke 0x4293D8B0")
                 await ctx.send("Pokemon injected.")
             else:
                 ctx.send("Injection not set up for this game yet.")
         elif check == "dump":
-            switch(serv, "getTitleID")
-            title = serv.recv(689)
-            title = title[0:-1]
-            title = str(title,'utf-8')
             if title == bd or sp:
-                switch(serv, "pointerPeek 344 0x4E34DD0 0xB8 0x10 0xA0 0x20 0x20 0x20")
-                asyncio.sleep(0.5)
-                pokemonBytes = serv.recv(689)
-                pokemonBytes = pokemonBytes[0:-1]
-                pokemonBytes = pokemonBytes[:-1]
-                with open("Files/sysbot/dump.eb8", "wb") as fileOut:
-                    fileOut.write(binascii.unhexlify(pokemonBytes))
+                await connection.switch(f"pointerPeek 344 {b1s1}")
+                pokemon = (await connection._r.read(689))[:-1]
+                with open("Files/sysbot/dump.eb8", "wb") as f:
+                    f.write(binascii.unhexlify(pokemon))
                 await ctx.send("Pokemon dumped.")
+            elif title == sw or sh:
+                await connection.switch(f"pointerPeek 344 0x4293D8B0")
+                pokemon = (await connection._r.read(689))[:-1]
+                with open("Files/sysbot/dump.ek8", "wb") as f:
+                    f.write(binascii.unhexlify(pokemon))
+                await ctx.send("Pokemon dumped.")   
             else:
                 ctx.send("Dumping not set up for this game yet.")
         else:
@@ -153,73 +164,67 @@ class remote(commands.Cog):
         if function is None:
             await ctx.send(embed=embed)
         check = function.lower()
+        connection = sysbot.connection(self.client)
+        await connection.connect()
         if check == "off":
-            switch(serv, "screenOff")
+            await connection.switch("screenOff")
             await ctx.send("Your switch screen was turned `off`.")
         elif check == "on":
-            switch(serv, "screenOn")
+            await connection.switch("screenOn")
             await ctx.send("Your switch screen was turned `on`.")
         elif check == "delay":
-            switch(serv, "screenOn")
+            await connection.switch("screenOn")
             await ctx.send(f"Your switch screen was turned `on`. It will turn off in `{delay}` seconds.")
             await asyncio.sleep(delay)
-            switch(serv, "screenOff")
+            await connection.switch("screenOff")
             await ctx.send(f"Your switch screen was turned `off`.")
         elif check == "shot":
             await protocol(ctx)
         elif check == "capture":
-            switch(serv, "click CAPTURE")
+            await connection.switch("click CAPTURE")
             embed=discord.Embed(description="Your switch screen was attempted to be captured.", color=0x17c70a)
             embed.set_footer(text="Note that this function does not work for LGPE.")
             await ctx.send(embed=embed)
         elif check in ["battery", "percent"]:
-            switch(serv, "charge")
-            await asyncio.sleep(1)
-            charge = serv.recv(689)
-            charge = charge[0:-1]
-            charge = str(charge,'utf-8')
-            await ctx.send(f"{switchip}'s battery level is at {charge}%.")
+            await connection.switch("charge")
+            charge = ((await connection._r.read(689))[:-1]).decode("utf-8")
+            await ctx.send(f"{switchip}'s battery level is at {str(charge)}%.")
+
         else:
             await ctx.send(embed=embed)
-
-# {-- Controller Settings --}
-    @commands.command()
-    @lock()
-    async def detach(self, ctx):
-        switch(serv, "detachController")
-        await ctx.send("Your controller was detached.")
-
-    @commands.command()
-    @lock()
-    async def reattach(self, ctx):
-        switch(serv, "controllerType 1")        
-        await ctx.send("Your controller was reattached.")
-
-    @commands.command()
-    @lock()
-    async def newcontroller(self, ctx):
-        switch(serv, "detachController")
-        await asyncio.sleep(0.5)
-        switch(serv, "controllerType 1")        
-        await ctx.send("Your controller was reset.")
 
 # {-- Other --}
     @commands.command()
     @lock()
+    async def newcontroller(self, ctx):
+        connection = sysbot.connection(self.client)
+        await connection.connect()
+        await connection.switch("detachController")
+        await asyncio.sleep(0.5)
+        await connection.switch("controllerType 1")
+        await ctx.send("Your controller was reset.")
+
+    @commands.command()
     async def titleid(self, ctx): 
-        switch(serv, "getTitleID")
-        title = serv.recv(689)
-        title = title[0:-1]
-        title = str(title,'utf-8')
+        connection = sysbot.connection(self.client)
+        await connection.connect()
+        await connection.switch("getTitleID")
+        title = ((await connection._r.read(689))[:-1]).decode("utf-8")
         await ctx.send(title)
 
-# {--- Reconnect to switch}
     @commands.command()
-    @lock()
-    async def reconnect(self, ctx):
-        self.client.unload_extension("pokemon.connection.wireless")
-        self.client.load_extension("pokemon.connection.wireless")
-        await ctx.reply("Attempted to reconnect.")
+    async def peek(self, ctx):
+        connection = sysbot.connection(self.client)
+        await connection.connect()
+        await connection.switch("pixelPeek")       
+        await asyncio.sleep(1)
+        screen = binascii.unhexlify((await connection._r.readline())[:-1])
+        async with aiofiles.open("res/screen.jpg", "wb") as f:
+            await f.write(screen)
+        embed = discord.Embed(color=0xFFD700)
+        image = discord.File("res/screen.jpg", filename="screen.jpg")
+        embed.set_image(url="attachment://screen.jpg")
+        await ctx.send(file = image, embed = embed)
 
 
 def setup(client):

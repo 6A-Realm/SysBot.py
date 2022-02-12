@@ -5,11 +5,10 @@ from aiohttp_requests import requests
 from pokemon.utils.pokecrypto import *
 from json import loads
 import base64
-import aiofiles
 
 # API links
 pinfo = "https://coreapi-production.up.railway.app/api/PokemonInfo"
-bdspshowdown = "https://pokegenpkhex-production.up.railway.app/pokemon/BDSP/showdown"
+bdspshowdown = "https://pokegenpkhex-production-061e.up.railway.app/pokemon/BDSP/showdown"
 
 # Legality check 
 async def check(ctx, response):
@@ -148,33 +147,48 @@ class API(commands.Cog):
                 return await ctx.channel.send("Ensure your file is valid, created from PKHeX.")
 
     @commands.command()
+    async def test(self, ctx):
+        bdspshowdown = "https://pokegenpkhex-production.up.railway.app/pokemon/BDSP/showdown"
+        showdown = await requests.post(bdspshowdown, json={"showdownSet": "ditto"})
+        await ctx.send(showdown)
+        print(showdown)
+
+    @commands.command()
     @commands.guild_only()
     async def convert(self, ctx, *, set: str = None):
 
         if set is not None:
 
                 # Convert showdown to file
-                showdown = await requests.post(bdspshowdown, json={"showdownSet": set})
-                bytes = io.BytesIO()
-                bytes.write(await showdown.content.read())
-                data = bytearray(bytes.getvalue())
+                showdown = await requests.post(bdspshowdown, json={"showdownSet": set}, headers = {"X-Pokemon-Encrypted": str(True).lower()})
+                data = (await showdown.content.read())
 
-                # Convert to bytes and save
-                pc = Pokecypto(data = data)
-                encrypt = pc.encrypt()
-                attachment = io.BytesIO(encrypt).read()
-
-                response = loads((await (await requests.post(pinfo, data={"pokemon": data})).content.read()).decode("utf-8"))
-                
-                if response["is_legal"] is True:
-                    species = response["species"]
-                    async with aiofiles.open(f"Files/sysbot/{species}.eb8", 'wb+') as f:
-                        await f.write(attachment)
-                    await ctx.send(file=discord.File(f"Files/sysbot/{species}.eb8"))
-                
+                if showdown.status == 200:
+                    file = discord.File(io.BytesIO(data), filename = f"{showdown.headers['x-pokemon-species']}.pb8")
+                    await ctx.send(file = file)
+                                
                 else:
                     await ctx.send("Unable to generate a legal file from the provided showdown set.")
         
+        elif set is None and len(ctx.message.attachments) != 0:
+            if str(ctx.message.attachments[0]).split(".")[-1].lower() == "pb8":
+
+                    # Convert to bytes and save
+                    buffer = io.BytesIO()
+                    await ctx.message.attachments[0].save(buffer)
+                    data = bytearray(buffer.getvalue())
+                    pc = Pokecypto(data = data)
+                    encrypt = pc.encrypt()
+
+                    # Send to coreapi instance 
+                    response = loads((await (await requests.post(pinfo, data={"pokemon": data})).content.read()).decode("utf-8"))
+                    if response["is_legal"] is True:
+                        species = response["species"]
+                        file = discord.File(io.BytesIO(encrypt), filename = f"{species}.eb8")
+                        await ctx.send(file = file)
+
+            else:
+                await ctx.send("Please provide a `.pb8` to convert.")
         else:
             await ctx.send("Provide a showdown set to convert.")
 

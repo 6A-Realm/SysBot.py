@@ -1,13 +1,17 @@
-from pokemon.connection.wireless import switch, serv
+import pokemon.connection.wireless as sysbot
 import random 
 import asyncio
 from rich.console import Console
 console = Console()
 
 # 8 digit code generator for num pad
-async def numpadcode(queued):
+async def numpadcode(self, queued):
 
     console.print("Generating 8 digit code.", style="red")
+
+    # New connection 
+    connection = sysbot.connection(self.client)
+    await connection.connect()
 
     # Using touch to input 8 digit code more accurately
     tradecode = []
@@ -28,7 +32,7 @@ async def numpadcode(queued):
             Y = 550
         if (code == 0):
             Y = 600
-        switch(serv, f"touch {X} {Y}")
+        await connection.switch(f"touch {X} {Y}")
         await asyncio.sleep(0.5)
 
     tradecode.insert(4, '-')
@@ -49,11 +53,15 @@ async def check(distributioncode):
 
 # Fixed code input
 distributioncode = "000000"
-async def fixedcode():
+async def fixedcode(self):
 
     if distributioncode.isdigit():
 
         await check(distributioncode)
+
+        # New connection 
+        connection = sysbot.connection(self.client)
+        await connection.connect()
 
         console.print("Inputting code.", style="red")
 
@@ -73,7 +81,7 @@ async def fixedcode():
                 Y = 550
             if (d == 0):
                 Y = 600
-            switch(serv, f"touch {X} {Y}")
+            await connection.switch(f"touch {X} {Y}")
             await asyncio.sleep(0.5)
 
         console.print(f'Searching on code: {distributioncode}.', style="bold underline purple")

@@ -37,7 +37,7 @@ Read the [Wiki](https://github.com/6A-Realm/SysBot.py/wiki) before asking questi
 ### Pkx -> Ekx
 - [X] Encryption and Decryption
 ### Screen capture
-- [ ] Screen capture Nintendo Switch
+- [X] Screen capture Nintendo Switch
 ### Offset Checks
 - [ ] Make it more stable
 
@@ -45,8 +45,9 @@ Read the [Wiki](https://github.com/6A-Realm/SysBot.py/wiki) before asking questi
 - The creators of this bot are not responsible for any actions you perform using it. Use it at you own risk.
 
 ## Credits:
-- [olliz0r's sys-botbase](https://github.com/olliz0r/sys-botbase): Switch automation and pokemon injection.
-- [Z1R343L](https://github.com/olliz0r/sys-botbase): Added api handling and pkx to ekx conversion. 
+- [olliz0r's sys-botbase](https://github.com/olliz0r/sys-botbase): Switch automation and RAM handling.
+- [Z1R343L](https://github.com/Z1R343L): API handling, pkx to ekx conversion, and general bot improvements. 
+- [DevYukine](https://github.com/Pokegen/Pokegen.PkHex): Creator of REST API supporting PkHex & ALM.
 
 ## License:
 [AGPLv3+](https://www.gnu.org/licenses/agpl-3.0.en.html)

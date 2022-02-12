@@ -9,7 +9,7 @@ class Extensions(commands.Cog):
     async def load(self, ctx, extension):
         cog = extension.lower()
         try:
-            ctx.client.load_extension(f'cogs.{cog}')
+            self.client.load_extension(f'cogs.{cog}')
         except commands.ExtensionAlreadyLoaded:
             await ctx.reply(f'Extension {cog} already loaded.')
         except commands.ExtensionNotFound:
@@ -22,7 +22,7 @@ class Extensions(commands.Cog):
     async def unload(self, ctx, extension):
         cog = extension.lower()
         try:
-            ctx.client.unload_extension(f'cogs.{cog}')
+            self.client.unload_extension(f'cogs.{cog}')
         except commands.ExtensionNotLoaded:
             await ctx.reply(f'Extension {cog} not loaded.')
         else:
@@ -33,8 +33,8 @@ class Extensions(commands.Cog):
     async def reload(self, ctx, extension):
         cog = extension.lower()
         try:
-            ctx.client.unload_extension(f'cogs.{cog}')
-            ctx.client.load_extension(f'cogs.{cog}')
+            self.client.unload_extension(f'cogs.{cog}')
+            self.client.load_extension(f'cogs.{cog}')
             await ctx.reply(f"{cog} reloaded.")
         except commands.ExtensionError as e:
             await ctx.reply(f"Error reloading {cog}.")

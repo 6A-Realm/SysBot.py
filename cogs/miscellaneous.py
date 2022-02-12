@@ -1,8 +1,11 @@
+from aiosqlite import connect
 import discord
 from discord.ext import commands
 from yaml import load
 import json
 import asyncio
+
+import pokemon.connection.wireless as sysbot
 
 # Loads token and prefix from config file
 with open("config.yaml") as file:

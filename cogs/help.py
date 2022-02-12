@@ -126,7 +126,6 @@ class help(commands.MinimalHelpCommand):
     async def send_pages(self):
         for description in self.paginator.pages:
             help = discord.Embed(description = ttr + description, color = self.context.author.color)
-            help.set_thumbnail(url = self.context.me.avatar_url)
 
         # Embeds
         embed=discord.Embed(title=f'{self.context.me.name} Commands', description=f"Utilize the dropdown menu to select help pages.{ttr}", color= self.context.author.color)

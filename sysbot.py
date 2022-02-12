@@ -10,6 +10,7 @@ from discord_slash import SlashCommand
 from colorama import Fore
 import ctypes
 from rich.console import Console
+import pokemon.connection.wireless as sysbot
 import subprocess
 import json
 
@@ -35,11 +36,8 @@ def get_prefix(client, message):
             return commands.when_mentioned_or(botprefix)(client, message)
 
 ##Simple bot settings like mentioning as a prefix, settings all intents to true, deleting built in discord.py help command
-client = commands.AutoShardedBot(name="SysBot 2.1.0", command_prefix=get_prefix, intents=discord.Intents.all())
+client = commands.AutoShardedBot(name="SysBot 2.2.0", command_prefix=get_prefix, intents=discord.Intents.all())
 slash = SlashCommand(client, sync_commands=True)
-pokemon = ["connection"] 
-pdiscord = ["advanced", "pokeinput", "queue", "remote", "trader"]
-
 console = Console()
 
 # State if autolauncher is toggled
@@ -71,13 +69,10 @@ async def on_ready():
     if autolauncher == 1:
         try:
             client.load_extension("pokemon.connection.wireless")
-        except Exception as e:
-            console.print(f"Unable to load {e}.", style="red")
-        for extension in pdiscord:
-            try:
-                client.load_extension("pokemon.discord." + extension)
-            except Exception as e:
-                console.print(f"Unable to load {extension} {e}.", style="red")
+            await sysbot.connection(client).initiate()
+        except:
+            console.print(f"Unable to launch wireless.py", style="red")
+
 
     elif autolauncher == 2:
         console.print('The bot will launch without sysbot commands.', style="blue")
@@ -89,13 +84,10 @@ async def on_ready():
         if choice in yes:
             try:
                 client.load_extension("pokemon.connection.wireless")
-            except Exception as e:
-                console.print(f"Unable to load {e}.", style="red")
-            for extension in pdiscord:
-                try:
-                    client.load_extension("pokemon.discord." + extension)
-                except Exception as e:
-                    console.print(f"Unable to load {extension} {e}.", style="red")
+                await sysbot.connection(client).initiate()
+
+            except:
+                console.print(f"Unable to launch wireless.py", style="red")
         else:
             print('The bot will launch without sysbot commands.')
             
@@ -110,9 +102,9 @@ async def on_ready():
         yes = {'yes', 'y'}
         choice = input().lower()
         if choice in yes:
-            subprocess.Popen('python pokemon/twitch.py')
+            subprocess.Popen('python pokemon/twitch/twitch.py')
         else:
-            print('The bot will launch without sysbot commands.')
+            print('Will not launch SysBot-Twitch.')
 
 # Build Plugins List
 plugins = []

@@ -1,13 +1,11 @@
 import discord
 from discord.ext import commands, tasks
+from pokemon.connection.wireless import setgame
 import random
 import asyncio
 
 # Queue Length
 queuelength = []
-
-# Game Title
-game = ["Pokémon"]
 
 # Cog 
 class PRESENCE(commands.Cog):
@@ -20,6 +18,7 @@ class PRESENCE(commands.Cog):
     async def presence(self):
         await self.client.wait_until_ready()
 
+        game = setgame
         # Presence
         length = len(queuelength)
         queue = random.randint(5,45) 
